@@ -1,0 +1,14 @@
+[{
+  "name"              : "AlloyEX",
+  "cwd"               : ".",
+  "script"            : "app.js",
+  "log_file"          : "logs/log.log",
+  "out_file"          : "logs/out.log",
+  "error_file"        : "logs/err.log",
+  "merge_logs"        : true,
+  "watch"             : false,
+  "max_restarts"      : 100,
+  "exec_interpreter"  : "node",
+  "exec_mode"         : "fork_mode",
+  "log_date_format"   : ""
+}]

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+logs/
+.DS_Store
+config.js
+.node-xmlhttprequest-sync*
+.ssl/*
+package-lock.json

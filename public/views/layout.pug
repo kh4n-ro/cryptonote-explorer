@@ -1,0 +1,32 @@
+doctype html
+html(ng-app="AlloyEX")
+  head
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
+    title {{ctrl.config.name}}
+    style(type="text/css") [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak { display: none !important; }
+    link(rel='stylesheet', href='/css/alloyex.min.css')
+  body
+    div(particles)
+    div.navbar.navbar-static-top(ng-cloak, ng-controller='navbarCtrl as ctrl')
+      div.container-fluid
+        div.navbar-header
+          button.navbar-toggle(type='button', ng-click='ctrl.isCollapsed = !ctrl.isCollapsed', data-toggle="collapse", data-target=".navbar-collapse")
+            i.icon-database
+          a.pool-logo(href='/')
+            //- img(src="/images/alloyex-alloy.png" alt="alloy logo")
+            span Alloy Blockchain Explorer
+        div#navbar-main.navbar-collapse.collapse(collapse='ctrl.isCollapsed')
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(href="#", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Tools
+                span.caret
+              ul.dropdown-menu
+                li Tool
+                li Tool
+    block content
+    script#aboutModal(type='text/ng-template')
+      .row
+        .col-xs-12
+          h4.text-center About
+          br          
+    script(src="/js/alloyex.min.js")

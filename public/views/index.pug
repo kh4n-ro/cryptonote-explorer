@@ -1,0 +1,160 @@
+extends ./layout.pug
+block content
+  div.container-fluid(ng-cloak, ng-controller='explorer_controller as ctrl', style="max-width: 1280px;")
+    .row
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='#', data-toggle='tooltip', data-placement='top', data-original-title='Blockchain height, total amount of blocks found on the network.')
+                    | Last block
+                    span {{ctrl.lastblock.height}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Average estimated network hash rate. Calculated by average difficulty.')
+                    | Hashrate
+                    span {{ctrl.averagehashrate}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Average difficulty by last 30 blocks.')
+                    | Difficulty
+                    span {{ctrl.averagedifficulty}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='The number of transactions in the network (excluding coinbase, i.e. reward for mined blocks).')
+                    | Total Txs
+                    span {{ctrl.getinfo.tx_count}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Current Base Reward (for last mined block).')
+                    | Reward
+                    span {{ctrl.lastblock.reward}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Total Alloy supply in circulation.')
+                    | Supply
+                    span {{ctrl.lastblock.alreadyGeneratedCoins}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Percent of already emitted coins related to Initial supply before Tail emission.')
+                    | Emission
+                    span {{ctrl.emission}}%
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Estimated block solve time at estimated network speed and current difficulty.')
+                    | Blocktime
+                    span {{ctrl.averageblocktime}}
+      .col-xs-12.col-sm-6.col-md-6
+        .panel.panel-default.tab-panel
+          span.text-default.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Difficulty based on the last blocks from the list below. Load more blocks to enlarge chart range.')
+            i.fa.fa-question-circle
+          .panel-body.chart-wrapper
+            canvas#difficultyChart(height='210')
+      .col-xs-12.col-sm-6.col-md-6
+        .panel.panel-default.tab-panel
+          span.text-default.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range.')
+            i.fa.fa-question-circle
+          .panel-body.chart-wrapper
+            canvas#difficultyChart2(height='210')
+    .row
+      .col-xs-12.col-sm-12.col-md-9.col-lg-9
+        .panel.panel-default
+          .input-group.shadow
+            a.btn.btn-default.input-group-addon(href='#') Older
+            span.input-group-addon No.
+            input.form-control(type='text', placeholder='Height')
+            a.btn.btn-default.input-group-addon(href='#') Go
+            a.btn.btn-default.input-group-addon.disabled(href='#') Newer 
+          .panel-body
+            table.table
+              thead
+                tr.text-center
+                  th.th-hash
+                    span Block hash
+                  th.th-height
+                    span Height
+                  th.th-diff
+                    span Difficulty
+                  th.th-txs
+                    span Tx Count
+                  th.size
+                    span Size
+                  th.time
+                    span Found
+              tbody(ng-cloak)
+                tr(ng-repeat='block in ctrl.lastblocks')
+                  td.text-center
+                    code.black-code {{ block.hash || '0x'}}
+                  td.text-center {{ block.height || 0 }}
+                  td.text-center {{ block.difficulty || 0 }}
+                  td.text-center {{ block.tx_count || 0 }}
+                  td.text-center {{ block.cumul_size || 0 }}
+                  td.text-right {{ block.timestamp * 1000 | timeagofilter }}
+          p.text-center
+            button.btn.btn-default(type='button') Load More
+          br
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='#', data-toggle='tooltip', data-placement='top', data-original-title='Blockchain height, total amount of blocks found on the network.')
+                    | Last block
+                    span {{ctrl.lastblock.height}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Last block difficulty.')
+                    | Last Diff
+                    span {{ctrl.lastblock.difficulty}}
+      .col-xs-6.col-sm-6.col-md-3.col-lg-3
+        .panel.panel-default.tab-panel
+          .panel-body
+            .row
+              ul.nav.nav-pills.nav-stacked
+                li
+                  a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Mempool Size.')
+                    | Mempool Txs
+                    span {{ctrl.getinfo.tx_pool_size}}
+    //- pre
+      p {{ctrl.getinfo | json}}
+      br
+      p {{ctrl.mempool | json}}
+      br
+      p {{ctrl.lastblock | json}}
+      br
+      p {{ctrl.lastblocks | json}}
