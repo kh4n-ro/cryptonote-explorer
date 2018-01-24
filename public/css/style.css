@@ -373,6 +373,23 @@ span.small-title span.small {
 	height: 100%;
 	z-index: -1;
 }
+
+.difftendency span {
+	font-size: 60px;
+	line-height: 230px;
+	font-weight: 400;
+}
+span.text-diff {
+	position: absolute;
+	font-size: 12px;
+	left: 35px;
+	bottom: 28px;
+	color: #FFF;
+	background-color: #546474;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 0 20px;
+}
 @media (max-width: 991px) {
 
 }

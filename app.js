@@ -25,15 +25,51 @@ const frontend_url  = CONFIG.FRONTEND.HOST;
 
 const DB_users = require('./db/users');
 const DB_pools = require('./db/pools');
-const DB_pooldata = require('./db/pooldata');
+
 const DB_mempool = require('./db/mempool');
+const timer = ms => new Promise( res => setTimeout(res, ms));
 
 let GETINFO = {};
 let LASTBLOCKHEADER = {};
 let MEMPOOL = [];
 let LASTBLOCKS = [];
 let LASTBLOCK = {};
+let HISTORY_BLOCKS = [];
+let HISTORY_BLOCKS_LEN = 60;
+let HISTORY_BLOCKS_INTERVAL = 60 * 1000;
+let parsedHistory = false;
 
+var explorer_charts = {
+  blocks : [],
+  txses : [],
+  sizes : [],
+  timestamps : []
+};
+
+var deep_charts = {
+  difficulties : [],
+  blocks : [],
+  txses : [],
+  sizes : [],
+  fees : [],
+  timestamps : []
+};
+
+let explorer_stats = {
+  symbol: CONFIG.SYMBOL
+};
+
+let deep_stats = {
+  averagehashrate : 0,
+  averagedifficulty: 0,
+  averageblocktime: 0,
+  averagefee: 0,
+  averagesize: 0,
+  symbol: CONFIG.SYMBOL
+};
+
+let savedheight = 0;
+let emissionpercent = 0;
 let server;
 
 /**
@@ -114,6 +150,14 @@ apiRoutes.get('/lastblock', function(req, res){
   return res.json(LASTBLOCK);
 });
 
+apiRoutes.get('/laststats', function(req, res){
+  return res.json(explorer_stats);
+});
+
+apiRoutes.get('/deepstats', function(req, res){
+  return res.json(deep_stats);
+});
+
 apiRoutes.get('/block/:query', function(req, res){
   if(req.params.query.length < 64) {
     daemon_searchblockbyheight(req.params.query, function(resp) {
@@ -148,6 +192,10 @@ frontend.get('/', (req, res) => {
   res.render('index');
 });
 
+frontend.get('/mempool', (req, res) => {
+  res.render('mempool');
+});
+
 frontend.get('/dashboard', (req, res) => {
   res.render('admin');
 });
@@ -171,20 +219,29 @@ server.on('error', function(e) {
     ws.send(JSON.stringify('ping'));
 
     ws.send(JSON.stringify({
-      type: 'getinfo',
-      data: GETINFO
-    }), function () { /* ignore errors */ });
-    ws.send(JSON.stringify({
       type: 'mempool',
       data: MEMPOOL
     }), function () { /* ignore errors */ });
     ws.send(JSON.stringify({
-      type: 'lastblock',
-      data: LASTBLOCK
-    }), function () { /* ignore errors */ });
-    ws.send(JSON.stringify({
       type: 'lastblocks',
       data: LASTBLOCKS
+    }), function () { /* ignore errors */ });
+    ws.send(JSON.stringify({
+      type: 'laststats',
+      data: explorer_stats
+    }), function () { /* ignore errors */ });
+    ws.send(JSON.stringify({
+      type: 'lastcharts',
+      data: explorer_charts
+    }), function () { /* ignore errors */ });
+
+    ws.send(JSON.stringify({
+      type: 'deepstats',
+      data: deep_stats
+    }), function () { /* ignore errors */ });
+    ws.send(JSON.stringify({
+      type: 'deepcharts',
+      data: deep_charts
     }), function () { /* ignore errors */ });
 
 
@@ -194,27 +251,48 @@ server.on('error', function(e) {
     });
 
     ws.on('message', function incoming(message) {
-
+      if (message === 'refreshblocks') {
+        console.log('got refresh request');
+        daemon_getlastblocks();
+        ws.send(JSON.stringify({
+          type: 'lastblocks',
+          data: LASTBLOCKS
+        }));
+      }
     });
 
     let socketreply = setInterval(function () {
-      ws.send(JSON.stringify({
-        type: 'getinfo',
-        data: GETINFO
-      }), function () { /* ignore errors */ });
       ws.send(JSON.stringify({
         type: 'mempool',
         data: MEMPOOL
       }), function () { /* ignore errors */ });
       ws.send(JSON.stringify({
-        type: 'lastblock',
-        data: LASTBLOCK
+        type: 'laststats',
+        data: explorer_stats
       }), function () { /* ignore errors */ });
       ws.send(JSON.stringify({
-        type: 'lastblocks',
-        data: LASTBLOCKS
+        type: 'deepstats',
+        data: deep_stats
       }), function () { /* ignore errors */ });
-    }, 10000);
+
+      if (savedheight == 0 || savedheight !== explorer_stats.bestheight) {
+        // no height saved or updating
+        savedheight = explorer_stats.bestheight;
+        ws.send(JSON.stringify({
+          type: 'deepcharts',
+          data: deep_charts
+        }), function () { /* ignore errors */ });
+        ws.send(JSON.stringify({
+          type: 'lastcharts',
+          data: explorer_charts
+        }), function () { /* ignore errors */ });
+        ws.send(JSON.stringify({
+          type: 'lastblocks',
+          data: LASTBLOCKS
+        }), function () { /* ignore errors */ });
+      }
+
+    }, 15000);
 
     ws.on('close', function () {
       clearInterval(socketreply);
@@ -252,38 +330,27 @@ function checkPool(poolApi) {
             let newpool = new DB_pools({
                 api: poolApi.api,
                 frontend: poolApi.frontend,
-                data: []
+                data: [{
+                  config: config,
+                  pool: pool,
+                  network: network
+                }]
             });
 
             newpool.save(function (err) {
               if (err) console.log(err);
               console.success('emp-start','New pool added to DB! %s', poolApi.frontend);
 
-              let newpooldata = new DB_pooldata({
-                frontend: poolApi.frontend,
-                config: config,
-                pool: pool,
-                network: network
-              });
-              newpooldata.save(function (err) {
-                if (err) console.log(err);
-                console.success('emp-start','New data added for pool! %s', poolApi.frontend);
-
-
-              })
             })
           }else {
+            var thisPool = pools[0];
+            thisPool.config = config;
+            thisPool.pool = pool;
+            thisPool.network = network;
 
-            let newpooldata = new DB_pooldata({
-              frontend: poolApi.frontend,
-              config: config,
-              pool: pool,
-              network: network
-            });
-            newpooldata.save(function (err) {
+            thisPool.save(function (err) {
               if (err) console.log(err);
               console.success('emp-start','Updated data for pool! %s', poolApi.frontend);
-
 
             })
 
@@ -302,6 +369,8 @@ function daemon_getinfo() {
   axios.get(CONFIG.DAEMON + '/getinfo')
   .then(summary => {
     GETINFO = summary.data;
+    explorer_stats.tx_count = GETINFO.tx_count;
+    explorer_stats.tx_pool_size = GETINFO.tx_pool_size;
   })
   .catch(err => console.error('emp-start','Cannot reach daemon %s',err.config.url))
   setTimeout(() => {
@@ -319,6 +388,13 @@ function daemon_lastblockheader() {
     LASTBLOCKHEADER = summary.data.result.block_header;
     daemon_searchblockbyhash(summary.data.result.block_header.hash, function (result) {
         LASTBLOCK = result;
+        explorer_stats.bestheight = result.height;
+        explorer_stats.supply = parseFloat(LASTBLOCK.alreadyGeneratedCoins * Math.pow(10, 12)).toFixed(2);
+        explorer_stats.supply = (parseInt(explorer_stats.supply || 0) / Math.pow(10, 12)).toFixed(2 || Math.pow(10, 12).toString().length - 1);
+        explorer_stats.reward = parseFloat(LASTBLOCK.reward / CONFIG.COINUNITS).toFixed(4);
+        explorer_stats.emission = parseFloat((LASTBLOCK.alreadyGeneratedCoins * Math.pow(10, 12)) / 8400000000000000000 * 10).toFixed(4);
+        explorer_stats.currentdifficulty = result.difficulty;
+        explorer_stats.currenthashrate = result.difficulty / CONFIG.BLOCKTARGETINTERVAL;
     })
   })
   .catch(err => console.error('emp-start','Cannot reach daemon %s',err.config.url))
@@ -409,6 +485,22 @@ function daemon_getlastblocks() {
   .then(summary => {
     if (summary.data.result) {
       LASTBLOCKS = summary.data.result.blocks;
+      explorer_charts = {
+        blocks : [],
+        txses : [],
+        sizes : [],
+        timestamps : []
+      };
+
+      for (var i = 0; i < LASTBLOCKS.length; i++) {
+
+        explorer_charts.blocks.push(parseInt(LASTBLOCKS[i].height));
+        explorer_charts.txses.push(parseInt(LASTBLOCKS[i].tx_count));
+        explorer_charts.sizes.push(parseInt(LASTBLOCKS[i].cumul_size));
+        explorer_charts.timestamps.push(new Date(LASTBLOCKS[i].timestamp * 1000).toISOString());
+
+      }
+
     }
   })
   .catch(err => console.error('emp-start','Cannot reach daemon %s',err.config.url))
@@ -416,8 +508,6 @@ function daemon_getlastblocks() {
     daemon_getlastblocks();
   }, 15000);
 }
-
-
 
 function daemon_searchpaymentid(query, cb) {
   axios.post(CONFIG.DAEMON + '/json_rpc',{
@@ -440,39 +530,18 @@ function daemon_mempool() {
   axios.post(CONFIG.DAEMON + '/json_rpc',{
         jsonrpc: "2.0",
         id: "test",
-        method: "f_pool_json",
+        method: "f_on_transactions_pool_json",
         params: {}
   })
   .then(summary => {
-    const mempoolstring = summary.data;
-    let rawTxs = mempoolstring.split('"transactions":"').pop();
-    rawTxs = rawTxs.split('"}}')[0];
+    let txs = summary.data.result.transactions;
     MEMPOOL = [];
-    let txsArray = [];
-    txsArray = rawTxs.split('\n\n');
-    txsArray.forEach(function(tx, i) {
-      let arrayOfLines = tx.split('\n');
-      let hash = arrayOfLines[0].split(': ').pop();
-
-      if (hash != "") {
-        hash = hash.slice(1, -1);
-        let timestamp = arrayOfLines[8].split('received:').pop();
-        timestamp = new Date(timestamp).getTime();
-        let fee = arrayOfLines[2].split(':').pop();
-        let size = arrayOfLines[1].split(':').pop();
-        MEMPOOL.push({
-          hash: hash,
-          fee: fee,
-          size: size,
-          firstseen: timestamp
-        })
+    for (var i = 0; i < txs.length; i++) {
+      if (txs[i].hash != "") {
+        MEMPOOL.push(txs[i]);
       }
-
-    });
-    new DB_pooldata(MEMPOOL).save(function (err) {
-      if (err) console.log(err);
-      console.success('emp-start','Updated mempool info!');
-    })
+    }
+    initMempoolDB(MEMPOOL);
   })
   .catch(err => console.error('emp-start','Cannot reach daemon %s',err.config.url))
   setTimeout(() => {
@@ -519,8 +588,75 @@ function setupDB() {
         }
     })
 
+
   });
 
+}
+
+function initMempoolDB(_mpool) {
+
+  DB_mempool.find({}, (err, mempool) => {
+      if (err) throw err;
+      if (mempool.length == 0) {
+
+        let newmempool = new DB_mempool({data:_mpool});
+
+        newmempool.save(function (err) {
+          if (err) console.log(err);
+          console.success('emp-start','Mempool DB Created!');
+
+        })
+      }else {
+        DB_mempool.findOneAndUpdate({ _id: mempool[0]._id }, {$set:{ data : _mpool }}, function(err, mpool) {
+          if (err) console.log(err);
+          console.success('emp-start','Updated mempool data!');
+        });
+
+      }
+  })
+}
+
+function updatehistoryaverages() {
+  var diffsum = deep_charts.difficulties.reduce(add, 0);
+  var feesum = deep_charts.fees.reduce(add, 0);
+  var sizesum = deep_charts.sizes.reduce(add, 0);
+
+  function add(a, b) {
+    return a + b;
+  }
+
+  deep_stats.averagedifficulty = Math.round(diffsum / deep_charts.difficulties.length);
+  deep_stats.averagesize = Math.round(sizesum / deep_charts.sizes.length);
+  deep_stats.averagefee = Math.round(feesum / deep_charts.fees.length);
+  deep_stats.averagehashrate = deep_stats.averagedifficulty / CONFIG.BLOCKTARGETINTERVAL;
+  deep_stats.averageblocktime = timeformat(deep_stats.averagedifficulty / deep_stats.averagehashrate);
+
+}
+
+function timeformat(seconds) {
+
+  var units = [
+    [60, 's.'],
+    [60, 'min.'],
+    [24, 'h.'],
+    [7, 'd.'],
+    [4, 'w.'],
+    [12, 'м.'],
+    [1, 'y.']
+  ];
+
+  function formatAmounts(amount, unit) {
+    var rounded = Math.round(amount);
+    return '' + rounded + ' ' + unit + (rounded > 1 ? '' : '');
+  }
+
+  var amount = seconds;
+  for (var i = 0; i < units.length; i++) {
+    if (amount < units[i][0])
+      return formatAmounts(amount, units[i][1]);
+    amount = amount / units[i][0];
+  }
+  return formatAmounts(amount, units[units.length - 1][1]);
 }
 
 function setupPools() {
@@ -539,6 +675,65 @@ function setupPools() {
 
 }
 
+emitter.on('historyBlock', function(block) {
+  HISTORY_BLOCKS.push(block);
+});
+
+function pullHistoryBlocks(len) {
+  let heights = [];
+  let stopheight = parseInt(LASTBLOCKHEADER.height + 1);
+  let startheight = parseInt(stopheight - len);
+
+  for (var i = 0; i < len; i++) {
+    daemon_searchblockbyheight(startheight+i,function (resp) {
+      emitter.emit('historyBlock', resp);
+    })
+    timer(300);
+    if (i == len-1) {
+      console.info('emp-start','Finished collecting chain history from last %s blocks', len);
+    }
+  }
+  parsedHistory = false;
+
+}
+
+setInterval(function () {
+  if (HISTORY_BLOCKS.length > 0 && !parsedHistory) {
+    //reset charts
+    deep_charts = {
+      difficulties : [],
+      blocks : [],
+      txses : [],
+      sizes : [],
+      fees : [],
+      timestamps : []
+    };
+    parseHistoryBlocks(HISTORY_BLOCKS);
+    parsedHistory = true;
+  }
+  if (parsedHistory || HISTORY_BLOCKS.length == 0) {
+    HISTORY_BLOCKS = [];
+    pullHistoryBlocks(HISTORY_BLOCKS_LEN);
+  }
+
+}, HISTORY_BLOCKS_INTERVAL);
+
+function parseHistoryBlocks(blocks) {
+
+  for (var i = 0; i < blocks.length; i++) {
+    deep_charts.difficulties.push(parseInt(blocks[i].difficulty));
+    deep_charts.blocks.push(parseInt(blocks[i].height));
+    deep_charts.txses.push(parseInt(blocks[i].transactions.length));
+    deep_charts.sizes.push(parseInt(blocks[i].transactionsCumulativeSize));
+    deep_charts.fees.push(parseInt(blocks[i].totalFeeAmount,10));
+    deep_charts.timestamps.push(new Date(blocks[i].timestamp * 1000).toISOString());
+
+    }
+    console.info('emp-start','Parsed chain history');
+
+    updatehistoryaverages();
+  }
+
 var gracefulShutdown = function() {
 	console.log('');
     console.error("xxx", "sys", "Received kill signal, shutting down gracefully.");
@@ -554,6 +749,7 @@ daemon_getinfo();
 daemon_lastblockheader();
 daemon_mempool();
 daemon_getlastblocks();
+pullHistoryBlocks(HISTORY_BLOCKS_LEN);
 
 server.listen(frontend_port);
 

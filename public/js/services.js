@@ -27,35 +27,15 @@ angular.module('AlloyEX.services', [])
 	return lodash;
 })
 
-.factory('ApiFactory', ['$http', '$rootScope', function ($http, $rootScope) {
+.factory('api', ['$http', '$rootScope', function ($http, $rootScope) {
     var factory = {};
 
-    var url = '/';
+    var apiurl = '/api/v1/';
 
-    factory.authenticate = function (user, callback) {
-        $http.post(url + 'api/authenticate', user).then(function (response) {
-            callback(null, response.data);
-        }, function (err) {
-            console.log(err);
-        });
-    };
-
-    factory.signup = function (user, callback) {
-        $http.post(url + 'api/signup', user).then(function (response) {
-            callback(null, response.data);
-        }, function (err) {
-            callback(err);
-        });
-    };
-
-    factory.getNames = function (callback) {
-        console.log($rootScope.token);
+		factory.getblockslist = function (height, callback) {
         var req = {
             method: 'GET',
-            url: url + 'api/names',
-            headers: {
-                'Authorization' : $rootScope.token
-            }
+            url: apiurl + 'blocks/' + height
         };
         $http(req).then(function (response) {
             callback(response.data);

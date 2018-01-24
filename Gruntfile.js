@@ -23,7 +23,8 @@ var vendor = [
 	'dist/js/lib/moment.en.min.js',
 	'dist/js/lib/toastr.min.js',
 	'dist/js/lib/angular-tooltips.min.js',
-	'node_modules/particles.js/particles.js'
+	'node_modules/particles.js/particles.js',
+	'dist/js/lib/chartjs.min.js'
 ];
 
 var styles = [

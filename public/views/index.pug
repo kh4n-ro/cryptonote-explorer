@@ -10,7 +10,7 @@ block content
                 li
                   a(href='#', data-toggle='tooltip', data-placement='top', data-original-title='Blockchain height, total amount of blocks found on the network.')
                     | Last block
-                    span {{ctrl.lastblock.height}}
+                    span {{ctrl.laststats.bestheight}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -19,7 +19,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Average estimated network hash rate. Calculated by average difficulty.')
                     | Hashrate
-                    span {{ctrl.averagehashrate}}
+                    span {{ctrl.deepstats.averagehashrate | hashratefilter}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -28,7 +28,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Average difficulty by last 30 blocks.')
                     | Difficulty
-                    span {{ctrl.averagedifficulty}}
+                    span {{ctrl.deepstats.averagedifficulty | difficultyfilter }}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -37,7 +37,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='The number of transactions in the network (excluding coinbase, i.e. reward for mined blocks).')
                     | Total Txs
-                    span {{ctrl.getinfo.tx_count}}
+                    span {{ctrl.laststats.tx_count}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -46,7 +46,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Current Base Reward (for last mined block).')
                     | Reward
-                    span {{ctrl.lastblock.reward}}
+                    span {{ctrl.laststats.reward}} {{ctrl.laststats.symbol}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -55,7 +55,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='top', data-original-title='Total Alloy supply in circulation.')
                     | Supply
-                    span {{ctrl.lastblock.alreadyGeneratedCoins}}
+                    span {{ctrl.laststats.supply}} {{ctrl.laststats.symbol}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -64,7 +64,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Percent of already emitted coins related to Initial supply before Tail emission.')
                     | Emission
-                    span {{ctrl.emission}}%
+                    span {{ctrl.laststats.emission}}%
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -73,28 +73,38 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Estimated block solve time at estimated network speed and current difficulty.')
                     | Blocktime
-                    span {{ctrl.averageblocktime}}
-      .col-xs-12.col-sm-6.col-md-6
+                    span {{ctrl.deepstats.averageblocktime}}
+      .col-xs-12.col-sm-11
         .panel.panel-default.tab-panel
-          span.text-default.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Difficulty based on the last blocks from the list below. Load more blocks to enlarge chart range.')
-            i.fa.fa-question-circle
+          span.text-diff.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Difficulty based on the last blocks from the list below. Load more blocks to enlarge chart range.')
+            p Difficulty Chart
           .panel-body.chart-wrapper
-            canvas#difficultyChart(height='210')
+            canvas#difficultychart(height='210')
+      .col-xs-1.hidden-xs.difftendency
+        .panel.panel-default.tab-panel.text-center(style="height:240px")
+          span.text-default.tab-helper(ng-show="ctrl.deepstats.averagedifficulty > ctrl.laststats.currentdifficulty" style="color: #8BC34A") -
+          span.text-default.tab-helper(ng-show="ctrl.deepstats.averagedifficulty <= ctrl.laststats.currentdifficulty" style="color: #F44336") +
       .col-xs-12.col-sm-6.col-md-6
         .panel.panel-default.tab-panel
           span.text-default.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range.')
             i.fa.fa-question-circle
           .panel-body.chart-wrapper
-            canvas#difficultyChart2(height='210')
+            canvas#txsizechart(height='210')
+      .col-xs-12.col-sm-6.col-md-6
+        .panel.panel-default.tab-panel
+          span.text-default.tab-helper(data-toggle='tooltip', data-placement='right', data-original-title='Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range.')
+            i.fa.fa-question-circle
+          .panel-body.chart-wrapper
+            canvas#txcountchart(height='210')
     .row
       .col-xs-12.col-sm-12.col-md-9.col-lg-9
         .panel.panel-default
-          .input-group.shadow
-            a.btn.btn-default.input-group-addon(href='#') Older
+          .input-group.shadow.hidden
+            a.btn.btn-default.input-group-addon(href='#' ng-click="ctrl.loadpreviousblocks()") Older
             span.input-group-addon No.
             input.form-control(type='text', placeholder='Height')
             a.btn.btn-default.input-group-addon(href='#') Go
-            a.btn.btn-default.input-group-addon.disabled(href='#') Newer 
+            a.btn.btn-default.input-group-addon(href='#' ng-disabled="ctrl.laststats.bestheight - ctrl.activeheight <  30" ng-click="ctrl.loadnextblocks()" ng-class="{'disabled':ctrl.laststats.bestheight - ctrl.activeheight <  30}") Newer 
           .panel-body
             table.table
               thead
@@ -114,13 +124,14 @@ block content
               tbody(ng-cloak)
                 tr(ng-repeat='block in ctrl.lastblocks')
                   td.text-center
-                    code.black-code {{ block.hash || '0x'}}
+                    code.black-code.hidden-xs {{ block.hash }}
+                    code.black-code.visible-xs {{ block.hash | hashFilter}}
                   td.text-center {{ block.height || 0 }}
-                  td.text-center {{ block.difficulty || 0 }}
+                  td.text-center {{ (block.difficulty | difficultyfilter) || 0 }}
                   td.text-center {{ block.tx_count || 0 }}
-                  td.text-center {{ block.cumul_size || 0 }}
+                  td.text-center {{ block.cumul_size || 0 }} b
                   td.text-right {{ block.timestamp * 1000 | timeagofilter }}
-          p.text-center
+          p.text-center.hidden
             button.btn.btn-default(type='button') Load More
           br
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
@@ -130,8 +141,8 @@ block content
               ul.nav.nav-pills.nav-stacked
                 li
                   a(href='#', data-toggle='tooltip', data-placement='top', data-original-title='Blockchain height, total amount of blocks found on the network.')
-                    | Last block
-                    span {{ctrl.lastblock.height}}
+                    | Last Hashrate
+                    span {{ctrl.laststats.currenthashrate | hashratefilter}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -140,7 +151,7 @@ block content
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Last block difficulty.')
                     | Last Diff
-                    span {{ctrl.lastblock.difficulty}}
+                    span {{ctrl.laststats.currentdifficulty | difficultyfilter}}
       .col-xs-6.col-sm-6.col-md-3.col-lg-3
         .panel.panel-default.tab-panel
           .panel-body
@@ -148,13 +159,5 @@ block content
               ul.nav.nav-pills.nav-stacked
                 li
                   a(href='javascript:void(0);', data-toggle='tooltip', data-placement='bottom', data-original-title='Mempool Size.')
-                    | Mempool Txs
-                    span {{ctrl.getinfo.tx_pool_size}}
-    //- pre
-      p {{ctrl.getinfo | json}}
-      br
-      p {{ctrl.mempool | json}}
-      br
-      p {{ctrl.lastblock | json}}
-      br
-      p {{ctrl.lastblocks | json}}
+                    | Mempool
+                    span {{ctrl.laststats.tx_pool_size}} Txs
