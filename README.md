@@ -5,15 +5,7 @@ This is a Cryptonote **Block Explorer** designed for tracking [**Alloy [XAO]**](
 
 It gathers data from the `Alloy daemon` and `compatible pools` via `rpc`, processes everything, saves to `MongoDB` and uses `WebSockets` to send stats over to a nice `AngularJS` interface.
 
-```mermaid
-graph TB
-A((NodeJS Server)) -- ws --> D[AngularJS Frontend]
-D[AngularJS Frontend] -- ws --> A((NodeJS Server))
-A((NodeJS Server)) --> E(MongoDB)
-E(MongoDB) --> A((NodeJS Server))
-B(Alloy daemon RPC) -- rpc --> A((NodeJS Server))
-C(Pools RPC) -- rpc --> A((NodeJS Server))
-```
+![Screenshot](http://alloyexplorer.com/screenshots/alloyex-structure.png "Structure")
 ## Screenshots
 ![Screenshot](http://alloyexplorer.com/screenshots/screenshot-1.png "Explorer")
 
@@ -26,7 +18,7 @@ C(Pools RPC) -- rpc --> A((NodeJS Server))
 * grunt
 
 ## Installation
-> **Important:** Make sure you have the prerequisites installed.
+> **Important:** Make sure you have the dependencies installed.
 
 ```bash
 git clone https://github.com/kh4n-ro/Alloy-Block-Explorer
