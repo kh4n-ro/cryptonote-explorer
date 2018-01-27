@@ -68,6 +68,9 @@ table td i {
 	left: 2px;
 }
 
+.table {
+	margin-bottom: 0;
+}
 code.black-code {
 	color: #fff;
 	background-color: #333;
@@ -373,7 +376,11 @@ span.small-title span.small {
 	height: 100%;
 	z-index: -1;
 }
-
+#navbar-main .nav>li>a {
+    font-size: 14px;
+    color: #FFF;
+    text-transform: uppercase;
+}
 .difftendency span {
 	font-size: 60px;
 	line-height: 230px;
@@ -381,14 +388,24 @@ span.small-title span.small {
 }
 span.text-diff {
 	position: absolute;
-	font-size: 12px;
-	left: 35px;
-	bottom: 28px;
-	color: #FFF;
-	background-color: #546474;
-	font-weight: 700;
-	text-transform: uppercase;
-	padding: 0 20px;
+  font-size: 12px;
+  left: 25px;
+  top: 10px;
+  color: #FFF;
+  background-color: rgba(84, 100, 116, 0.2);
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0 20px;
+}
+.panel-body.slim .nav-pills>li>a span {
+    font-size: 20px;
+    line-height: 18px;
+}
+.panel-body.slim .nav-pills>li>a {
+    font-size: 12px;
+}
+.panel-body.slim {
+	padding: 0 15px;
 }
 @media (max-width: 991px) {
 

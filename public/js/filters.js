@@ -109,6 +109,45 @@ angular.module('AlloyEX.filters', [])
 	};
 })
 
+.filter('bytesfilter', function() {
+	return function(hashes) {
+		var result = 0;
+		var unit = '';
+
+		if(hashes !== 0 && hashes < 1024) {
+			result = hashes;
+			unit = 'B';
+		}
+
+		if(hashes >= 1024 && hashes < Math.pow(1024, 2)) {
+			result = hashes / 1024;
+			unit = 'KB';
+		}
+
+		if(hashes >= Math.pow(1024, 2) && hashes < Math.pow(1024, 3)) {
+			result = hashes / Math.pow(1024, 2);
+			unit = 'MB';
+		}
+
+		if(hashes >= Math.pow(1024, 3) && hashes < Math.pow(1024, 4)) {
+			result = hashes / Math.pow(1024, 3);
+			unit = 'GB';
+		}
+
+		if(hashes >= Math.pow(1024, 4) && hashes < Math.pow(1024, 5)) {
+			result = hashes / Math.pow(1024, 4);
+			unit = 'TB';
+		}
+
+    if(hashes >= Math.pow(1024, 5) && hashes < Math.pow(1024, 7)) {
+      result = hashes / Math.pow(1024, 5);
+      unit = 'PB';
+    }
+
+		return result.toFixed(2) + ' ' + unit;
+	};
+})
+
 .filter('timeClass', function() {
 	return function(timestamp, active) {
 		if( ! active)

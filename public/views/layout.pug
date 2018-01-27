@@ -12,17 +12,15 @@ html(ng-app="AlloyEX")
         div.navbar-header
           button.navbar-toggle(type='button', ng-click='ctrl.isCollapsed = !ctrl.isCollapsed', data-toggle="collapse", data-target=".navbar-collapse")
             i.icon-database
-          a.pool-logo(href='/')
+          a.pool-logo(ng-href='/#/')
             //- img(src="/images/alloyex-alloy.png" alt="alloy logo")
             span Alloy Blockchain Explorer
         div#navbar-main.navbar-collapse.collapse(collapse='ctrl.isCollapsed')
           ul.nav.navbar-nav.navbar-right
-            li.dropdown
-              a.dropdown-toggle(href="#", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Tools
-                span.caret
-              ul.dropdown-menu
-                li Tool
-                li Tool
+            li
+              a(ng-href="/#mempool") Mempool
+            li
+              a(ng-href="/#pools") Pool Monitor
     block content
     script#aboutModal(type='text/ng-template')
       .row

@@ -1,0 +1,161 @@
+<div class="container-fluid" ng-cloak="ng-cloak" ng-controller="mempool_controller as ctrl" style="max-width: 1280px">
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="#" data-toggle="tooltip" data-placement="top" data-original-title="">Queue<span>{{ctrl.laststats.tx_pool_size}} tx</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="">Value<span>{{ctrl.laststats.tx_pool_value}} {{ctrl.laststats.symbol}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="">Fees<span>{{ ctrl.laststats.tx_pool_fees }} {{ctrl.laststats.symbol}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="">Size<span>{{ ctrl.laststats.tx_pool_totalsize/1024 | number:2 }} KB</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="">cost/KB<span>{{ctrl.laststats.tx_pool_avg_tx_fee/(ctrl.laststats.tx_pool_avg_tx_size/1024) | number:8}} {{ctrl.laststats.symbol}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="">Avg Transfer<span>{{ctrl.laststats.tx_pool_avg_tx_value }} {{ctrl.laststats.symbol}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="">Avg Fee<span>{{ctrl.laststats.tx_pool_avg_tx_fee}} {{ctrl.laststats.symbol}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="">Avg Size<span>{{ctrl.laststats.tx_pool_avg_tx_size/1024 | number:2 }} KB</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="panel panel-default tab-panel"><span class="text-diff tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Difficulty based on the last blocks from the list below. Load more blocks to enlarge chart range.">
+          <p>Live Tx Size Chart</p></span>
+        <div class="panel-body chart-wrapper">
+          <canvas id="txsizechart" height="210"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+        <p>Avg Fee Chart</p></span>
+        <div class="panel-body chart-wrapper">
+          <canvas id="feechart" height="210"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6">
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+        <p>Avg Size Chart</p></span>
+        <div class="panel-body chart-wrapper">
+          <canvas id="avgtxsizechart" height="210"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <table class="table">
+            <thead>
+              <tr class="text-center">
+                <th class="th-hash"><span>Value</span></th>
+                <th class="th-height"><span>Fee</span></th>
+                <th class="th-txs"><span>Size</span></th>
+                <th class="size"><span>Tx Hash</span></th>
+                <!-- <th class="time"><span>Propagation</span></th> -->
+              </tr>
+            </thead>
+            <tbody ng-cloak="ng-cloak">
+              <tr ng-class="{'bg-danger': tx.size/1024 > 22}" ng-repeat="tx in ctrl.mempool | orderBy:'size'">
+                <td class="text-right">{{ tx.amount_out/1000000000000 | number:4 || 0 }} {{ctrl.laststats.symbol}}</td>
+                <td class="text-right">{{ tx.fee/1000000000000 | number:8 || 0 }} {{ctrl.laststats.symbol}}</td>
+                <td class="text-right">{{ tx.size/1024 | number:2 || 0 }} KB</td>
+                <td class="text-center"><code class="black-code hidden-xs">{{ tx.hash }}</code><code class="black-code visible-xs">{{ tx.hash | hashFilter}}</code></td>
+                <!-- <td class="text-center"> {{(tx.fee/1000000000000)/(tx.size/1024) | number: 8}} </td> -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <br/>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-3">
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+        <p>Avg Hashrate Chart</p></span>
+        <div class="panel-body chart-wrapper">
+          <canvas id="hashchart" height="105"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-3">
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+        <p>Avg Difficulty Chart</p></span>
+        <div class="panel-body chart-wrapper">
+          <canvas id="avgdiffchart" height="105"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

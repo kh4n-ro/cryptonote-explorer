@@ -92,6 +92,12 @@ module.exports = function(grunt) {
 						cwd: 'public/js/lib/',
 						src: ['*.*'],
 						dest: 'dist/js/lib'
+					},
+					{
+						expand: true,
+						cwd: 'public/templates/',
+						src: ['*.*'],
+						dest: 'dist/templates/'
 					}
 				]
 			}
