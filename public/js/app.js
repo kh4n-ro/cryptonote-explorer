@@ -8,7 +8,8 @@ var AlloyEX = angular.module('AlloyEX', [
 	'ngRoute',
 	'ngDialog',
 	'tooltips',
-	'tableSort'
+	'tableSort',
+	'dt-hamburger-menu'
 ]).config(function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {

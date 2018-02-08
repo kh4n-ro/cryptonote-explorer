@@ -553,7 +553,7 @@ AlloyEX.controller('home_controller', ['$scope', '$filter', '$interval', 'api','
 
       if (resp === 'ping') {
         if (!socketUp) {
-          socketUp = true;
+          var socketUp = true;
           $rootScope.ws.send('alloyex-main');
         }
         $rootScope.ws.send('pong');
@@ -1153,7 +1153,7 @@ AlloyEX.controller('mempool_controller', ['$scope', '$filter', '$interval', 'api
 
     if (resp === 'ping') {
       if (!socketUp) {
-        socketUp = true;
+        var socketUp = true;
         $rootScope.ws.send('alloyex-mempool');
       }
       $rootScope.ws.send('pong');
@@ -1210,7 +1210,7 @@ AlloyEX.controller('mempool_controller', ['$scope', '$filter', '$interval', 'api
 
 }])
 
-AlloyEX.controller('navbarCtrl', ['$localStorage', '$scope', 'ngDialog', '$rootScope', function($localStorage, $scope, ngDialog, $rootScope) {
+AlloyEX.controller('menu_controller', ['$localStorage', '$scope', 'ngDialog', '$rootScope', function($localStorage, $scope, ngDialog, $rootScope) {
   var self = this;
 
   self.isCollapsed = true;
@@ -1229,6 +1229,10 @@ AlloyEX.controller('navbarCtrl', ['$localStorage', '$scope', 'ngDialog', '$rootS
 
   self.saveToken = function(token) {
     $localStorage.jwtToken = token;
+  }
+
+  self.menuOpen = function() {
+    self.menuclicked = true;
   }
 
   self.getToken = function(token) {
@@ -1267,6 +1271,156 @@ AlloyEX.controller('navbarCtrl', ['$localStorage', '$scope', 'ngDialog', '$rootS
     self.isLoggedIn = false;
   }
 }])
+
+AlloyEX.controller('search_controller', ['$localStorage', '$scope', 'ngDialog', '$rootScope','api', function($localStorage, $scope, ngDialog, $rootScope, api) {
+  var self = this;
+  self.searchclicked = false;
+
+  $rootScope.$watch('config', function() {
+    self.config = $rootScope.config;
+  })
+
+  self.search = function() {
+    self.searchclicked = !self.searchclicked;
+  }
+
+  self.searchresults = {};
+
+  self.searchFieldChange = function () {
+    if (self.searchvalue.length > 0) {
+      if ( self.searchvalue.length < 64 ) {
+          // search by height
+          api.getblock(self.searchvalue, function (resp) {
+            if (resp === '"KO"') {
+              console.log('block not found/valid');
+            }else {
+              // console.log('Block:', resp);
+              self.searchresults = {
+                type: 'valid block',
+                data: resp
+              };
+            }
+          })
+      }else if ( self.searchvalue.length == 64 ) {
+        // search block
+        api.getblock(self.searchvalue, function (resp) {
+          if (resp === '"KO"') {
+            // try tx
+            api.gettx(self.searchvalue, function (r) {
+              if (r === '"KO"') {
+                console.log('nothing found!');
+              }else {
+                self.searchresults = {
+                  type: 'valid transaction',
+                  data: r
+                };
+              }
+            })
+          }else {
+            self.searchresults = {
+              type: 'valid block',
+              data: resp
+            };
+          }
+        })
+      } else {
+          console.log('wrong search!');
+      }
+    }
+  }
+}])
+
+AlloyEX.controller('block_controller', ['$rootScope', 'ngDialog', '$scope', '$routeParams', 'api', function($rootScope, ngDialog, $scope, $routeParams, api) {
+  var vm = this;
+  var socketUp = false;
+
+  api.getblock($routeParams.blockhash, function (res) {
+      vm.block = res;
+  });
+
+  if ($rootScope.ws) {
+    // Socket listeners
+    // ----------------
+
+    $rootScope.ws.onmessage = function (event) {
+      var resp = JSON.parse(event.data);
+
+      if (resp === 'ping') {
+        if (!socketUp) {
+          var socketUp = true;
+          $rootScope.ws.send('alloyex-blockpage');
+        }
+        $rootScope.ws.send('pong');
+      }
+    };
+
+    $rootScope.ws.onopen = function (event) {
+
+    };
+  }
+
+  var timeout = setInterval(function() {
+    $scope.$apply();
+  }, 300);
+
+
+}]);
+
+AlloyEX.controller('transaction_controller', ['$rootScope', 'ngDialog', '$scope', '$routeParams', 'api', function($rootScope, ngDialog, $scope, $routeParams, api) {
+  var vm = this;
+  var socketUp = false;
+  var host = window.document.location.host.replace(/:.*/, '')
+
+  if (!$rootScope.ws) {
+    $rootScope.ws = new WebSocket('ws://' + host + ':3000');
+  }else {
+    $rootScope.ws.send('alloyex-txpage');
+  }
+
+  api.gettx($routeParams.txhash, function (res) {
+      vm.transaction = res;
+      // console.log(vm.transaction);
+  });
+
+  // Socket listeners
+  // ----------------
+
+  $rootScope.ws.onmessage = function (event) {
+    var resp = JSON.parse(event.data);
+
+    if (resp === 'ping') {
+      if (!socketUp) {
+        var socketUp = true;
+        $rootScope.ws.send('alloyex-txpage');
+      }
+      $rootScope.ws.send('pong');
+    }
+
+    if (resp.type === 'laststats') {
+      vm.laststats = resp.data;
+    }
+
+  };
+
+
+
+
+  $rootScope.ws.onopen = function (event) {
+
+  };
+
+  var timeout = setInterval(function() {
+    $scope.$apply();
+  }, 300);
+
+
+}]);
+
+AlloyEX.controller('paymentid_controller', ['$rootScope', 'ngDialog', '$scope', function($rootScope, ngDialog, $scope) {
+  var self = this;
+
+
+}]);
 
 AlloyEX.controller('AdminCtrl', ['$rootScope', '$localStorage', '$sessionStorage', 'ngDialog', '$scope', function($rootScope, $localStorage, $sessionStorage, ngDialog, $scope) {
 

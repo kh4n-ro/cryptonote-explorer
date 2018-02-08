@@ -1,0 +1,183 @@
+<div class="container-fluid" style="max-width: 1280px" ng-controller="block_controller as ctrl">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p style="line-height: 40px; margin-bottom: -10px; font-size: 20px; font-weight: 100; color:#FFF">Block
+            <small class="hidden-xs" style="word-break: break-all;float: right;font-weight: 300;">{{ctrl.block.hash}}</small>
+            <small class="visible-xs" style="word-break: break-all;float: right;font-weight: 300;">{{ctrl.block.hash | hashFilter}}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Height<span id="block_height" class="pull-right"><span class="block_height">{{ctrl.block.height}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Depth<span class="pull-right"><span class="block_height">{{ctrl.block.depth}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Reward <span>{{ctrl.block.reward | tabvaluesfilter}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Difficulty<span>{{ctrl.block.difficulty | difficultyfilter}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Fees<span>{{ctrl.block.totalFeeAmount | tabvaluesfilter}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Size<span>{{ctrl.block.blockSize | bytesfilter}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Txs Size<span>{{ctrl.block.transactionsCumulativeSize | bytesfilter}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Block Txs<span>{{ctrl.block.transactions.length}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span> All Txs <span>{{ctrl.block.alreadyGeneratedTransactions}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Supply<span>{{ctrl.block.alreadyGeneratedCoins | number:0}} XAO</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span>Orphan<span>{{ctrl.block.orphan_status}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body slim">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a></span> &nbsp;&nbsp;&nbsp;<span>{{ctrl.block.timestamp*1000 | date:'medium'}}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Hash</th>
+                    <th>Fee</th>
+                    <th>Total Amount</th>
+                    <th>Size</th>
+                  </tr>
+                </thead>
+                <tbody id="transactions_rows">
+                  <tr ng-repeat="tx in ctrl.block.transactions">
+                    <td class="text-center"><span>
+                      <a class="hidden-xs" ng-href="#tx/{{tx.hash}}"><code class="black-code">{{tx.hash}}</code></a>
+                      <a class="visible-xs" ng-href="#tx/{{tx.hash}}"><code class="black-code">{{tx.hash | hashFilter}}</code></a>
+                    </span></td>
+                    <td class="text-center"><span>{{tx.fee | valuesfilter}}</span></td>
+                    <td class="text-center"><span>{{tx.amount_out | valuesfilter}}</span></td>
+                    <td class="text-center"><span>{{tx.size | bytesfilter}}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>

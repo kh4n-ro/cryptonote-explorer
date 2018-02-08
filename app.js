@@ -173,7 +173,7 @@ server.on('error', function(e) {
             // console.error('Client state is ' + wss.clients[i].readyState);
         }
         else{
-            console.log('broadcasting data');
+            // console.log('broadcasting data');
             wss.clients[i].send(data);
         }
     }
@@ -183,6 +183,7 @@ server.on('error', function(e) {
  wss.on('connection', function connection(ws) {
     let explorer_reply;
     let mempool_reply;
+    let txpage_reply;
     ws.isAlive = true;
 
     ws.send(JSON.stringify('ping'));
@@ -292,6 +293,20 @@ server.on('error', function(e) {
 
       } else if (message === 'pools-page')  {
 
+
+      } else if (message === 'alloyex-txpage')  {
+
+        ws.send(JSON.stringify({
+          type: 'laststats',
+          data: AlloyEX.stats
+        }), function () { /* ignore errors */ });
+
+        txpage_reply = setInterval(function () {
+          ws.send(JSON.stringify({
+            type: 'laststats',
+            data: AlloyEX.stats
+          }), function () { /* ignore errors */ });
+        }, 10 * 1000);
 
       }
 

@@ -6,25 +6,25 @@ html(ng-app="AlloyEX")
     style(type="text/css") [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak { display: none !important; }
     link(rel='stylesheet', href='/css/alloyex.min.css')
   body
-    div(particles)
-    div.navbar.navbar-static-top(ng-cloak, ng-controller='navbarCtrl as ctrl')
-      div.container-fluid
-        div.navbar-header
-          button.navbar-toggle(type='button', ng-click='ctrl.isCollapsed = !ctrl.isCollapsed', data-toggle="collapse", data-target=".navbar-collapse")
-            i.icon-database
-          a.pool-logo(ng-href='/#/')
-            //- img(src="/images/alloyex-alloy.png" alt="alloy logo")
-            span Alloy Blockchain Explorer
-        div#navbar-main.navbar-collapse.collapse(collapse='ctrl.isCollapsed')
-          ul.nav.navbar-nav.navbar-right
-            li
-              a(ng-href="/#mempool") Mempool
-            li
-              a(ng-href="/#pools") Pool Monitor
+    div(ng-cloak, ng-controller='menu_controller as ctrl')
+      .menu-helper.hidden-xs(ng-hide="ctrl.menuclicked")
+        .arrow
+        span Start here
+      dt-hamburger-menu(ng-click="ctrl.menuOpen()")
+    div(ng-cloak, ng-controller='search_controller as ctrl')
+      .btn.btn-circle.btn-default.search-button(ng-click="ctrl.search()")
+        i.fa.fa-search.fa-2x(ng-hide="ctrl.searchclicked")
+        i.fa.fa-times-circle.fa-2x(ng-show="ctrl.searchclicked")
+      .search-overlay(ng-show="ctrl.searchclicked")
+        .content-wrap
+          input.form-control(ng-change="ctrl.searchFieldChange()" ng-model="ctrl.searchvalue")
+          p.search-result(ng-if="ctrl.searchresults.type")
+            span.label.label-success.pull-left {{ctrl.searchresults.type}}
+            span.label.label-success.pull-right
+              a(ng-if="ctrl.searchresults.type === 'valid transaction'" ng-href="/#/tx/{{ctrl.searchresults.data.txDetails.hash}}" ng-click="ctrl.search()") view tx
+              a(ng-if="ctrl.searchresults.type === 'valid block'" ng-href="/#/block/{{ctrl.searchresults.data.hash}}" ng-click="ctrl.search()") view block
+            code.black-code.pull-right {{ctrl.searchresults.data.hash || ctrl.searchresults.data.txDetails.hash}} @ height {{ctrl.searchresults.data.height || ctrl.searchresults.data.block.height}}
     block content
-    script#aboutModal(type='text/ng-template')
-      .row
-        .col-xs-12
-          h4.text-center About
-          br          
+    div(particles style="z-index: -1;")
     script(src="/js/alloyex.min.js")
+    

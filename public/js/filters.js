@@ -148,6 +148,20 @@ angular.module('AlloyEX.filters', [])
 	};
 })
 
+.filter('valuesfilter', function() {
+	return function(units) {
+    var result = units / Math.pow(10, 12);
+		return result.toFixed(12) + ' XAO';
+	};
+})
+
+.filter('tabvaluesfilter', function() {
+	return function(units) {
+    var result = units / Math.pow(10, 12);
+		return result.toFixed(8) + ' XAO';
+	};
+})
+
 .filter('timeClass', function() {
 	return function(timestamp, active) {
 		if( ! active)

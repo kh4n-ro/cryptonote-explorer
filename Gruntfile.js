@@ -24,7 +24,8 @@ var vendor = [
 	'dist/js/lib/toastr.min.js',
 	'dist/js/lib/angular-tooltips.min.js',
 	'node_modules/particles.js/particles.js',
-	'dist/js/lib/chartjs.min.js'
+	'dist/js/lib/chartjs.min.js',
+	'dist/js/lib/dt-hamburger-menu.js'
 ];
 
 var styles = [
@@ -32,7 +33,9 @@ var styles = [
 	'toastr.min.css',
 	'ngDialog.min.css',
 	'angular-tooltips.min.css',
-	'style.css'
+	'style.css',
+	'dt-hamburger-menu.css',
+	'fontawesome-all.min.css'
 ];
 
 module.exports = function(grunt) {
@@ -61,9 +64,16 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: 'public/fonts/',
-						src: ['minimal-*.*'],
-						dest: 'dist/fonts/',
+						cwd: 'public/webfonts/',
+						src: ['*.*'],
+						dest: 'dist/webfonts/',
+						filter: 'isFile'
+					},
+					{
+						expand: true,
+						cwd: 'public/images/',
+						src: ['*.*'],
+						dest: 'dist/images/',
 						filter: 'isFile'
 					},
 					{

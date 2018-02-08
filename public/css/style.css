@@ -292,6 +292,18 @@ button.navbar-toggle {
 	color: #ff8a00;
 }
 
+.text-white {
+	color: #FFF!important;
+}
+
+.text-thick {
+	font-weight: 600;
+}
+
+.text-thin {
+	font-weight: 300;
+}
+
 span.small-title {
 	font-weight: 700;
 	font-size: 12px;
@@ -407,10 +419,76 @@ span.text-diff {
 .panel-body.slim {
 	padding: 0 15px;
 }
+.nav a.tab-secondary-line {
+  font-size: 12px;
+  position: absolute;
+  top: 20px;
+  left: 1px;
+}
+.btn-circle {
+	border-radius: 50%!important;
+}
+.search-button {
+	position: fixed;
+	right: 25px;
+	top: 25px;
+	z-index: 4;
+	width: 62px;
+	height: 60px;
+	line-height: 55px;
+	background: #2f323b;
+	color: #FFF;
+	border: 2px solid;
+}
+.search-overlay {
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: rgba(48, 50, 59, 0.9);
+	overflow-x: hidden;
+	transition: 0.5s;
+}
+
+.search-overlay input {
+	position: relative;
+	width: 75%;
+	text-align: center;
+	margin-top: 30px;
+	height: 65px;
+	border-radius: 0;
+	margin: 0 auto;
+	border: none;
+	outline: none;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+.content-wrap {
+    top: calc(50% - 65px);
+    position: absolute;
+    width: 100%;
+}
+p.search-result {
+    width: 75%;
+    color: #FFF;
+    margin: 0 auto;
+    padding: 15px 0;
+    text-transform: uppercase;
+}
+p.search-result span {
+	line-height: 20px;
+}
+p.search-result span a {
+	color: #FFF;
+}
 @media (max-width: 991px) {
 
 }
 @media (max-width: 768px) {
+	body {
+    padding-top: 20px;
+	}
 	.pool-logo {
 		margin-left: 15px;
 	}
@@ -419,6 +497,32 @@ span.text-diff {
 	}
 	.nav>li {
 		display: inline-block;
+		width: 100%;
+	}
+	.nav-pills>li>a {
+		font-size: 12px;
+	}
+	dt-hamburger-menu {
+		top: initial;
+		left: initial;
+		right: 25px;
+		bottom: 25px;
+	}
+	.search-button {
+		right: 28px;
+    bottom: 100px;
+		left: initial;
+		top: initial;
+	}
+	.hamburger-menu-content .menu-list {
+		margin-bottom: 40px;
+		padding-top: 30px;
+	}
+	.hamburger-menu-content .menu-item {
+    padding: 0 15px;
+	}
+	.table-responsive {
+		border: none!important;
 	}
 }
 @media screen and (max-width: 500px) {

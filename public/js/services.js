@@ -42,5 +42,25 @@ angular.module('AlloyEX.services', [])
         });
     };
 
+		factory.getblock = function (query, callback) {
+        var req = {
+            method: 'GET',
+            url: apiurl + 'block/' + query
+        };
+        $http(req).then(function (response) {
+            callback(response.data);
+        });
+    };
+
+		factory.gettx = function (hash, callback) {
+        var req = {
+            method: 'GET',
+            url: apiurl + 'tx/' + hash
+        };
+        $http(req).then(function (response) {
+            callback(response.data);
+        });
+    };
+
     return factory;
 }])

@@ -1,0 +1,174 @@
+<div class="container-fluid" style="max-width: 1280px" ng-controller="transaction_controller as ctrl">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p style="line-height: 40px; margin-bottom: -10px; font-size: 20px; font-weight: 100; color:#FFF">Tx
+            <small class="hidden-xs" style="word-break: break-all;float: right;font-weight: 300;">{{ctrl.transaction.txDetails.hash}}</small>
+            <small class="visible-xs" style="word-break: break-all;float: right;font-weight: 300;">{{ctrl.transaction.txDetails.hash | hashFilter}}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li ng-if="ctrl.transaction.block.timestamp && ctrl.laststats.height">
+                <a>Confirmations<span>{{ctrl.laststats.height - ctrl.transaction.block.height}}</span></a>
+              </li>
+              <li ng-if="!ctrl.transaction.block.timestamp"><a>Unconfirmed</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a>Fee<span>{{ctrl.transaction.txDetails.fee | tabvaluesfilter}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a>Outputs<span>{{ctrl.transaction.txDetails.amount_out | tabvaluesfilter}}</span></a>
+              <a class="tab-secondary-line">Mixin &nbsp;&nbsp;<span>{{ctrl.transaction.txDetails.mixin}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a>Size<span>{{ctrl.transaction.txDetails.size | bytesfilter}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="ctrl.transaction.block.timestamp">
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+        <div class="panel panel-default tab-panel">
+          <div class="panel-body slim">
+            <div class="row">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a ng-href="/#block/{{ctrl.transaction.block.height}}">Height<span>{{ctrl.transaction.block.height}}</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+        <div class="panel panel-default tab-panel">
+          <div class="panel-body slim">
+            <div class="row">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a>Block Txs<span>{{ctrl.transaction.block.tx_count}}</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <div class="panel panel-default tab-panel">
+          <div class="panel-body slim">
+            <div class="row">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a>Block Size<span>{{ctrl.transaction.block.cumul_size | bytesfilter}}</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <div class="panel panel-default tab-panel">
+          <div class="panel-body slim">
+            <div class="row">
+              <ul class="nav nav-pills nav-stacked">
+                <li><a>&nbsp;<span>{{ctrl.transaction.block.timestamp*1000 | date:'medium'}}</span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p class="text-white text-right"><span class="label">{{ctrl.transaction.tx.vin.length}} Inputs</span></p>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>Key</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="input in ctrl.transaction.tx.vin" ng-if="ctrl.transaction.tx.vin[0].type !== 'ff'">
+                    <td class="text-right">{{input.value.amount | valuesfilter}}</td>
+                    <td class="text-center">
+                      <code class="black-code hidden-xs">{{input.value.k_image}}</code>
+                      <code class="black-code visible-xs">{{input.value.k_image | hashFilter}}</code>
+                    </td>
+                </tr>
+                <tr ng-if="ctrl.transaction.tx.vin[0].type === 'ff'">
+                    <td class="text-center">{{ctrl.transaction.txDetails.amount_out | tabvaluesfilter}}</td>
+                    <td class="text-center"><code class="black-code">Block Payment</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <p class="text-white text-right"><span class="label">{{ctrl.transaction.tx.vout.length}} Outputs</span></p>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Amount</th>
+                  <th>Image</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="output in ctrl.transaction.tx.vout">
+                  <td class="text-center">{{output.amount | valuesfilter}}</td>
+                  <td class="text-center">
+                    <code class="black-code hidden-xs">{{output.target.data.key}}</code>
+                    <code class="black-code visible-xs">{{output.target.data.key | hashFilter}}</code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+  </div>
+</div>

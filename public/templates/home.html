@@ -5,7 +5,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Blockchain height, total amount of blocks found on the network.">Last block<span>{{ctrl.laststats.lastblockheight}}</span></a></li>
+              <li><a href="javascript:void(0);">Last block<span>{{ctrl.laststats.lastblockheight}}</span></a></li>
             </ul>
           </div>
         </div>
@@ -16,7 +16,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Average estimated network hash rate. Calculated by average difficulty.">Hashrate<span>{{ctrl.deepstats.averagehashrate | hashratefilter}}</span></a></li>
+              <li><a href="javascript:void(0);">Hashrate<span>{{ctrl.deepstats.averagehashrate | hashratefilter}}</span></a></li>
             </ul>
           </div>
         </div>
@@ -27,7 +27,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Average difficulty by last 30 blocks.">Difficulty<span>{{ctrl.deepstats.averagedifficulty | difficultyfilter }}</span></a></li>
+              <li><a href="javascript:void(0);">Difficulty<span>{{ctrl.deepstats.averagedifficulty | difficultyfilter }}</span></a></li>
             </ul>
           </div>
         </div>
@@ -38,7 +38,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="The number of transactions in the network (excluding coinbase, i.e. reward for mined blocks).">Total Txs<span>{{ctrl.laststats.tx_count}}</span></a></li>
+              <li><a href="javascript:void(0);">Total Txs<span>{{ctrl.laststats.tx_count}}</span></a></li>
             </ul>
           </div>
         </div>
@@ -49,7 +49,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Current Base Reward (for last mined block).">Reward<span>{{ctrl.laststats.reward}} {{ctrl.laststats.symbol}}</span></a></li>
+              <li><a href="javascript:void(0);">Reward<span>{{ctrl.laststats.reward}} {{ctrl.laststats.symbol}}</span></a></li>
             </ul>
           </div>
         </div>
@@ -60,7 +60,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-original-title="Total Alloy supply in circulation.">Supply<span>{{ctrl.laststats.supply}} {{ctrl.laststats.symbol}}</span></a></li>
+              <li><a href="javascript:void(0);">Supply<span>{{ctrl.laststats.supply}} {{ctrl.laststats.symbol}}</span></a></li>
             </ul>
           </div>
         </div>
@@ -71,7 +71,7 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="Percent of already emitted coins related to Initial supply before Tail emission.">Emission<span>{{ctrl.laststats.emission}}%</span></a></li>
+              <li><a href="javascript:void(0);">Emission<span>{{ctrl.laststats.emission}}%</span></a></li>
             </ul>
           </div>
         </div>
@@ -82,14 +82,14 @@
         <div class="panel-body">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="Estimated block solve time at estimated network speed and current difficulty.">Blocktime<span>{{ctrl.deepstats.averageblocktime}}</span></a></li>
+              <li><a href="javascript:void(0);">Blocktime<span>{{ctrl.deepstats.averageblocktime}}</span></a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
     <div class="col-xs-12 col-sm-11">
-      <div class="panel panel-default tab-panel"><span class="text-diff tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Difficulty based on the last blocks from the list below. Load more blocks to enlarge chart range.">
+      <div class="panel panel-default tab-panel"><span class="text-diff tab-helper">
           <p>Live Difficulty Chart</p></span>
         <div class="panel-body chart-wrapper">
           <canvas id="difficultychart" height="210"></canvas>
@@ -100,7 +100,7 @@
       <div class="panel panel-default tab-panel text-center text-diff" style="height:240px"><span class="text-default tab-helper" ng-show="ctrl.deepstats.averagedifficulty &gt; ctrl.laststats.currentdifficulty" style="color: #8BC34A">-</span><span class="text-default tab-helper" ng-show="ctrl.deepstats.averagedifficulty <= ctrl.laststats.currentdifficulty" style="color: #F44336">+</span></div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper">
         <p>Avg Hashrate Chart</p></span>
         <div class="panel-body chart-wrapper">
           <canvas id="hashchart" height="210"></canvas>
@@ -108,7 +108,7 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-6 col-md-6">
-      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper">
         <p>Avg Difficulty Chart</p></span>
         <div class="panel-body chart-wrapper">
           <canvas id="avgdiffchart" height="210"></canvas>
@@ -126,16 +126,16 @@
                 <th class="th-hash"><span>Block hash</span></th>
                 <th class="th-height"><span>Height</span></th>
                 <th class="th-txs"><span>Tx Count</span></th>
-                <th class="size"><span>Size</span></th>
+                <th class="size hidden-xs"><span>Size</span></th>
                 <th class="time"><span>Found</span></th>
               </tr>
             </thead>
             <tbody ng-cloak="ng-cloak">
               <tr ng-repeat="block in ctrl.lastblocks">
-                <td class="text-center"><code class="black-code hidden-xs">{{ block.hash }}</code><code class="black-code visible-xs">{{ block.hash | hashFilter}}</code></td>
+                <td class="text-center"><a ng-href="/#block/{{block.hash}}"><code class="black-code hidden-xs">{{ block.hash }}</code><code ng-click="'/#block/' + block.hash" class="black-code visible-xs">{{ block.hash | hashFilter}}</code></a></td>
                 <td class="text-center">{{ block.height || 0 }}</td>
                 <td class="text-center">{{ block.tx_count || 0 }}</td>
-                <td class="text-center">{{ block.cumul_size | bytesfilter }}</td>
+                <td class="text-center hidden-xs">{{ block.cumul_size | bytesfilter }}</td>
                 <td class="text-right">{{ block.timestamp * 1000 | timeagofilter }}</td>
               </tr>
             </tbody>
@@ -146,41 +146,41 @@
         </p><br/>
       </div>
     </div>
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
       <div class="panel panel-default tab-panel">
-        <div class="panel-body">
+        <div class="panel-body slim">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="#" data-toggle="tooltip" data-placement="top" data-original-title="Blockchain height, total amount of blocks found on the network.">Last Hashrate<span>{{ctrl.laststats.currenthashrate | hashratefilter}}</span></a></li>
+              <li><a href="javascript:void(0);">Last Hashrate<span>{{ctrl.laststats.currenthashrate | hashratefilter}}</span></a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
       <div class="panel panel-default tab-panel">
-        <div class="panel-body">
+        <div class="panel-body slim">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="Last block difficulty.">Last Diff<span>{{ctrl.laststats.currentdifficulty | difficultyfilter}}</span></a></li>
+              <li><a href="javascript:void(0);">Last Diff<span>{{ctrl.laststats.currentdifficulty | difficultyfilter}}</span></a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
       <div class="panel panel-default tab-panel">
-        <div class="panel-body">
+        <div class="panel-body slim">
           <div class="row">
             <ul class="nav nav-pills nav-stacked">
-              <li><a href="javascript:void(0);" data-toggle="tooltip" data-placement="bottom" data-original-title="Mempool Size.">Mempool<span>{{ctrl.laststats.tx_pool_size}} Txs</span></a></li>
+              <li><a href="javascript:void(0);">Mempool<span>{{ctrl.laststats.tx_pool_size}} Txs</span></a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper">
         <p>Avg TX Fee</p></span>
         <div class="panel-body chart-wrapper">
           <canvas id="avgtxfeechart" height="105"></canvas>
@@ -188,7 +188,7 @@
       </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper" data-toggle="tooltip" data-placement="right" data-original-title="Number of transactions and their size based on the last blocks from the list below. Load more blocks to enlarge chart range."><i class="fa fa-question-circle"></i>
+      <div class="panel panel-default tab-panel"><span class="text-diff text-default tab-helper">
         <p>Avg TX Size</p></span>
         <div class="panel-body chart-wrapper">
           <canvas id="avgtxsizechart" height="105"></canvas>
