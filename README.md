@@ -1,5 +1,11 @@
 The Cryptonote Explorer
 ============
+
+[![AngularJS](https://img.shields.io/badge/1.6.5-green.svg?logo=angular&label=angularjs&style=for-the-badge)](https://code.angularjs.org/1.6.5/docs/misc/downloading)
+[![NodeJS](https://img.shields.io/badge/8.6.0-green.svg?logo=node.js&label=nodejs&style=for-the-badge)](https://nodejs.org/en/download/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![Build passing](https://img.shields.io/appveyor/ci/gruntjs/grunt.svg?style=for-the-badge)](http://makeapullrequest.com)
+
 See it live on [**alloyexplorer.com**](https://alloyexplorer.com)
 
 This is a **Blockchain Explorer** initially designed for tracking the [**Alloy [XAO]**](https://alloyproject.org)  services and network status but currently supporting a growing number of cryptocurrencies.
@@ -35,7 +41,7 @@ Provide a set of open-sourced services that I believe should be available by def
 
 ## Screenshots
 > **Important:** A live version of this explorer can be found @ [https://alloyexplorer.com](https://alloyexplorer.com)
->
+
 ![Screenshot](https://cdn.explorer.sh/cnexplorer/01-cnexplorer-home.jpg "Home")
 
 ![Screenshot](https://cdn.explorer.sh/cnexplorer/02-cnexplorer-mempool.jpg "Mempool")
@@ -47,20 +53,23 @@ Provide a set of open-sourced services that I believe should be available by def
 ![Screenshot](https://cdn.explorer.sh/cnexplorer/05-cnexplorer-paperwallet.jpg "Paper Wallet")
 
 ## Prerequisites
-* nodeJS `8.6.0`
-* npm `5.4.2`
-* mongodb `3.4.4`
-* grunt-cli `1.2.0`
+> Click on a shield to go to the downloads page
+
+[![NodeJS](https://img.shields.io/badge/8.6.0-green.svg?logo=node.js&label=nodejs&style=for-the-badge)](https://nodejs.org/en/download/)
+[![MongoDB](https://img.shields.io/badge/3.4.4-green.svg?logo=mongodb&label=mongodb&style=for-the-badge)](https://www.mongodb.com/download-center/community)
+[![NPM](https://img.shields.io/badge/5.4.2-green.svg?logo=npm&label=npm&style=for-the-badge)](https://nodejs.org/en/download/)
+[![grunt-cli](https://img.shields.io/badge/1.2.0-green.svg?label=grunt-cli&style=for-the-badge)](https://gruntjs.com/getting-started#installing-the-cli)
 
 ## Installation
-> **Important:** Make sure you have the dependencies installed.
+> **Important:** Make sure you have the above dependencies installed.
 
 ```bash
+apt install git -Y
 git clone https://github.com/kh4n-ro/cryptonote-explorer
 cd cryptonote-explorer
 npm update
 npm install
-sudo npm install -g grunt-cli
+sudo npm i -g grunt grunt-cli
 ```
 
 To build run
@@ -71,6 +80,7 @@ grunt build
 ## Config
 > This example config file is located under `lib/config-example.js`
 > After entering your own data, save the file under `lib/config.js`
+
 ```bash
 module.exports = {
   "NAME": "Alloy Explorer",
