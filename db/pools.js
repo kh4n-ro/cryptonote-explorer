@@ -1,51 +1,23 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    deepPopulate = require('mongoose-deep-populate')(mongoose);
+    Schema = mongoose.Schema;
 
 var poolSchema = new Schema({
-  api: String,
-  frontend: String,
-  data: [{
-    config: {
-      ports: [{
-        port: Number,
-        difficulty: Number,
-        desc: String
-      }],
-      hashrateWindow: Number,
-      fee: Number,
-      coin: String,
-      symbol: String,
-      depth: Number,
-      coreDonation: Number,
-      doDonations: Boolean,
-      version: String,
-      minPaymentThreshold: Number,
-      denominationUnit: Number,
-      blockTime: Number,
-      slushMiningEnabled: Boolean,
-      weight: Number
-    },
-    pool: {
-      stats: {
-        lastBlockFound: String
-      },
-      totalBlocks: Number,
-      totalPayments: Number,
-      totalMinersPaid: Number,
-      miners: Number,
-      hashrate: Number,
-      roundHashes: Number,
-      lastBlockFound: String
-    },
-    network: {
-      difficulty: Number,
-      height: Number,
-      timestamp: Number,
-      reward: Number,
-      hash: String
-    }
-  }]
-},{timestamps:true}).plugin(deepPopulate);
+  link : String,
+  api : String,
+  rootapi : String,
+  height : Number,
+  blocksfound : Number,
+  lastfoundblock : Number,
+  paymentsmade : Number,
+  minerspaid : Number,
+  activeminers : Number,
+  hashrate : Number,
+  fee : Number,
+  color: String,
+  poolversion : String,
+  minpayment : Number,
+  denomination : Number,
+  miningports : [Schema.Types.Mixed]
+},{timestamps:true});
 
 module.exports = mongoose.model('Pools', poolSchema);

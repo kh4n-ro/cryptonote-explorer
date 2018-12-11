@@ -1,6 +1,6 @@
 dt-hamburger-menu {
     position: fixed;
-    left: 25px;
+    right: 25px;
     top: 25px;
     z-index: 10;
 }
@@ -139,7 +139,7 @@ a.logo-link {
 
 .menu-helper {
     position: fixed;
-    left: 50px;
+    right: 25px;
     top: 75px;
     z-index: 10;
 }
@@ -151,11 +151,11 @@ a.logo-link {
     background-position: 0 50%;
     background-size: auto 70px;
     background-image: url(../images/arrow.svg);
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    transform: rotate(180deg);
+    -webkit-transform: rotate(265deg);
+    -moz-transform: rotate(265deg);
+    -ms-transform: rotate(265deg);
+    -o-transform: rotate(265deg);
+    transform: rotate(265deg);
 }
 .menu-list a {
 	width: 100%;
@@ -172,4 +172,6 @@ a.logo-link {
     text-transform: uppercase;
     font-size: 18px;
     font-weight: 400;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
 }

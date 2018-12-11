@@ -1,0 +1,189 @@
+<div class="container-fluid" ng-cloak="ng-cloak" ng-controller="pools_controller as ctrl" style="max-width: 1280px">
+  <div id="alertrow" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body thin text-center poolinfo text-white">
+          <span>Need help? <strong>Join</strong> the {{ctrl.config.paper_wallet_config.coinName}} miners and pools owners in our <strong><a href="http://alloyproject.org/discord" target="_blank"><span class="label label-danger">#mining</span></a>
+          </strong> channel on Discord!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);">Pools<span>{{ctrl.laststats.poolshashrate | hashratefilter}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);">Miners<span>{{ctrl.laststats.knownminers}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);">Network<span>{{ ctrl.deepstats.instanths | hashratefilter }}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body">
+          <div class="row">
+            <ul class="nav nav-pills nav-stacked">
+              <li><a href="javascript:void(0);">Difficulty<span>{{ ctrl.laststats.currentdifficulty  | difficultyfilter}}</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12">
+      <div id="map" class="shadow" style="height: 400px; width: 100%; margin: 0 auto;"></div>
+    </div>
+    <div class="col-xs-12 col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th class="th-hash"><span>Pool Name</span></th>
+                  <th class="th-height"><span>Height</span></th>
+                  <th class="th-height"><span>Status</span></th>
+                  <th class="th-txs"><span>Hashrate</span></th>
+                  <th class="size"><span>Miners</span></th>
+                  <th class="time"><span>Fee</span></th>
+                  <th class="time"><span>Min Payout</span></th>
+                  <th class="time"><span>Blocks Found</span></th>
+                  <th class="time"><span>Payments Made</span></th>
+                  <th class="time"><span>Last Block</span></th>
+                  <th class="time"><span>Pool Release</span></th>
+                  <th class="time"><span>Latency (ms)</span></th>
+                </tr>
+              </thead>
+              <tbody ng-cloak="ng-cloak">
+                <tr ng-repeat="pool in ctrl.pools | orderBy:'hashrate'" ng-style="{'border-left':'15px solid', 'border-color' : pool.color}" ng-hide="pool.height <= ctrl.laststats.lastblockheight - 3 || pool.height >= ctrl.laststats.lastblockheight + 2">
+                  <td class="text-center">
+                    <a ng-if="!ctrl.config.hidedominantpools" ng-href="http://{{pool.link}}" target="_blank"><code class="black-code"> {{pool.link}} </code></a>
+                    <a ng-if="ctrl.config.hidedominantpools && pool.hashrate*100/ctrl.laststats.poolshashrate < ctrl.config.dominancepercent" ng-href="http://{{pool.link}}" target="_blank"><code class="black-code"> {{pool.link}} </code></a>
+                    <a ng-if="ctrl.config.hidedominantpools && pool.hashrate*100/ctrl.laststats.poolshashrate >= ctrl.config.dominancepercent" href="javascript:void(0);"><code class="black-code"> Hidden </code></a>
+                  </td>
+                  <td class="text-center">{{ pool.height || 0 }}</td>
+                  <td ng-show="pool.height <= ctrl.laststats.lastblockheight && pool.height > ctrl.laststats.lastblockheight - 3" class="text-center"><span class="label label-success">Online</span></td>
+                  <td ng-show="pool.height <= ctrl.laststats.lastblockheight - 3" class="text-center"><span class="label label-danger">Offline</span></td>
+                  <td ng-show="pool.height >= ctrl.laststats.lastblockheight + 2" class="text-center"><span class="label label-danger">Fork</span></td>
+                  <td class="text-center">{{ pool.hashrate | hashratefilter }}</td>
+                  <td class="text-center">{{ pool.activeminers || 0 }}</td>
+                  <td class="text-center">{{ pool.fee || 0 }} %</td>
+                  <td class="text-center">{{ pool.minpayment | tabvaluesfilter }}</td>
+                  <td class="text-center">{{ pool.blocksfound || 0 }}</td>
+                  <td class="text-center">{{ pool.paymentsmade || 0 }}</td>
+                  <td class="text-center">{{ pool.lastfoundblock || 0 }}</td>
+                  <td class="text-center">{{ pool.poolversion || 0 }}</td>
+                  <td class="text-center"><code class="black-code">{{ pool.latency || 'N/A' }}<span ng-if="pool.latency"> ms</span></code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 hidden" style="margin-top: 20px;">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <p class="hidden">Wallet pool tracker<span class="small" style="display:block;font-weight:300;">Enter your {{ctrl.config.paper_wallet_config.coinName}} Address to track statistics among known pools</span></p>
+              <input type="text" name="workerAddress" id="workerAddress" class="form-control" placeholder=" Enter your {{ctrl.config.paper_wallet_config.coinName}} Address to track statistics among known pools">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="input-group">
+                <input type="number" class="form-control" ng-model="minerhashrate" placeholder="Enter your hash rate">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle hash-multiplier" data-toggle="dropdown">
+                    <span>{{ctrl.hashmultipliers[ctrl.hashmultiplier]}}</span> <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li ng-repeat="multiplier in ctrl.hashmultipliers" ng-click="ctrl.selectMultiplier($index);"><a href="javascript:void(0);" data-mul="{{$index}}">{{multiplier}}</a></li>
+                  </ul>
+                </div>
+                <span class="input-group-addon">=</span>
+                <span class="input-group-addon"> <span>{{ctrl.minerprofit | number:2}}</span> {{ctrl.config.symbol}} / day</span>
+              </div>
+            </div>
+            <div class="col-xs-12">
+              <p class="text-center text-white m-t-20 m-b-20">{{ctrl.config.paper_wallet_config.coinName}} is using its own cryptonight algorithm: <span class="label label-danger">{{ctrl.config.ALGORITHM}}</span> so your hashrate will be <b>different</b> from other cryptonight coins. <br> Please <b>use</b> one of the supported miners below</p>
+              <div class="row text-center m-b-20">
+                <div class="col-xs-4" ng-repeat="miner in ctrl.miningsoftware">
+                  <a href="{{miner.url}}" target="_blank"><div class="label label-stats fa-1x">{{miner.name}}</div></a>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr class="text-center">
+                      <th class="th-hash"><span>Device</span></th>
+                      <th class="th-height"><span>Expected Hashrate</span></th>
+                    </tr>
+                  </thead>
+                  <tbody ng-cloak="ng-cloak">
+                    <tr ng-repeat="device in ctrl.miningdevices">
+                      <td class="text-center">{{ device.name }}</td>
+                      <td class="text-center">{{ device.hashrate }} H/s</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="text-center text-white m-t-20">If you have any values you want to <i>submit</i> to the list above, please contact: <b><i>kh4n#7475</i></b> from our <strong><a href="http://alloyproject.org/discord" target="_blank"><span class="label label-info">Discord channel</span></a></strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="ctrl.config.hidedominantpools" class="col-xs-12">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body thin text-center txwarning text-white">
+          <span><strong>Important:</strong> Any mining pool that passes <span class="label label-danger">{{ctrl.config.dominancepercent}}%</span> of the average {{ctrl.config.paper_wallet_config.coinName}} network hashrate will be <em>hidden</em> from the above table and their names <em> hidden </em> from the charts below</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <canvas id="poolshashratechart" style="margin: 0 auto;"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <canvas id="poolsminerchart" style="margin: 0 auto;"></canvas>
+        </div>
+      </div>
+    </div>
+</div>

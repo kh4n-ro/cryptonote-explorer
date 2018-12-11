@@ -1,0 +1,222 @@
+<div class="container-fluid" ng-cloak="ng-cloak" ng-controller="paperwallet_controller as ctrl" style="max-width: 1280px">
+  <script type="text/javascript" src="js/lib/paperwallet.js"></script>
+  <script type="text/javascript">
+    function selectLang() {
+      genwallet(document.getElementById("language-selector").options[document.getElementById("language-selector").selectedIndex].value, angular.element(document.getElementById('language-selector')).scope().paper_wallet_config);
+    }
+  </script>
+  <div class="row">
+    <div class="col-xs-12">
+      <div id="paperwallet">
+
+        <div class="row no-print">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <div class="panel-body tab-panel">
+                <a id="createbutton" class="download-offline" href="javascript:void(0)" ng-click="ctrl.walletCreate()" style="display:none;">Create Wallet!</a>
+                <a id="restorebutton" class="download-offline" href="javascript:void(0)" ng-click="ctrl.walletRestore()">Restore Wallet!</a>
+                <div class="notification">
+                  <span>Please make sure you <a class="btn btn-xs btn-info" href="javascript:void(0)" onclick="window.print();">PRINT</a> your wallet or snapshot this page after generation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row no-print">
+          <div class="col-md-12">
+            <div class="panel panel-primary">
+              <div class="panel-body tab-panel tab-error">
+                <span>
+                  This page generates a new {{ctrl.config.paper_wallet_config.coinName}} paperwallet. It is self contained and
+                  does all the necessary calculations locally, so is suitable for generating a new wallet on a machine
+                  that is not connected to the network, and may even never be. This way, you can create
+                  an {{ctrl.config.paper_wallet_config.coinName}} wallet without risking the keys.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="restorewallet" style="display:none;">
+
+          <div class="row no-print">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel">
+                  <form>
+                    <div class="form-group">
+                      <label class="control-label" for="restore_widget">Restore wallet from mnemonic seed</label>
+                      <input type="text" value="" class="form-control" id="restore_widget" />
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label" for="lang-selector">Mnemonic seed language</label>
+                      <select class="form-control" id="lang-selector">
+                        <option value="english" id=lang_en>English</option>
+                        <option value="spanish" id=lang_es>Spanish</option>
+                        <option value="portuguese" id=lang_p>Portuguese</option>
+                        <option value="german" id=lang_de>Deutsch</option>
+                        <option value="french" value="Français" id=lang_fr>Français</option>
+                        <option value="italian" value="Italiano" id=lang_it>Italiano</option>
+                        <option value="dutch" value="Nederlands" id=lang_nl>Nederlands</option>
+                        <option value="polish" id=lang_pl>Polski</option>
+                        <option value="ukrainian" id=lang_uk>Українська</option>
+                        <option value="russian" id=lang_ru>Русский</option>
+                        <option value="japanese" id=lang_jp>日本語</option>
+                        <option value="chinese_simplified" id=lang_cn>简体中文 (中国)</option>
+                      </select>
+                    </div>
+                    <input class="btn btn-primary" type="button" ng-click="ctrl.checkrestoreseed()" value="Restore wallet"/>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="createwallet">
+          <div class="row no-print">
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel">
+                  <form>
+                    <div class="form-group">
+                      <label class="control-label" for="user_entropy_widget">Custom entropy for deterministic wallet <small>(leave empty to use the browser’s PRNG)</small></label>
+                      <input type="text" value="" class="form-control" id="user_entropy_widget" oninput="checkEntropy();" />
+                    </div>
+                    <div style="color: red; display: none" id="user_entropy_warning_widget">WARNING: entropy is way too low for the wallet to be secure: aim for 256 bits (about a hundred dice throws)</div>
+                    <input class="btn btn-primary" type="button" ng-click="ctrl.genwallet(null);"
+                    value="Generate random wallet" id="gen_with_custom_entropy_button"/> <!-- disabled="disabled" -->
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel">
+                  <form>
+                    <div class="form-group">
+                      <label class="control-label" for="user_entropy_widget">Prefix (very slow for more than a few characters)</label>
+                      <input type="text" value="A" class="form-control" id="prefix_widget" oninput="check_prefix_validity()"; />
+                    </div>
+                    <input class="btn btn-primary" type="button" onclick="js:genwallet_prefix();" value="Generate vanity wallet" action="" id="gen_prefix_widget"/>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel">
+                  <p>This is the {{ctrl.config.symbol}} address you give to third parties to send {{ctrl.config.paper_wallet_config.coinName}} to you.
+                    <span class="label label-danger"><strong>It is the only information here that's meant to be public.</strong></span>
+                  </p>
+                  <code class="black-code pull-left" id="address_widget" style="word-break: break-all;">
+                    generating...
+                  </code>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
+              <span class="qrcode shadow" id="address_qr_widget"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-danger">
+                <div class="panel-body tab-panel">
+                  <p>
+                    The <span class="label label-primary"><strong>mnemonic seed</strong></span> is a string that comprises 25 words and allows you to recreate your private keys. <span class="label label-danger"><strong>Keep it secure!</strong></span>
+                  </p>
+                  <code class="black-code pull-left">
+                    <span id="mnemonic_widget">Generating... </span>
+                  </code>
+                  <div class="row no-print">
+                    <div class="col-md-12">
+                      <form style="margin-top: 15px;">
+                        <div class="form-group">
+                          <label class="control-label" for="language-selector">Mnemonic seed language</label>
+                          <select class="form-control" id="language-selector" onchange="selectLang()">
+                            <option value="english" id=lang_en>English</option>
+                            <option value="spanish" id=lang_es>Spanish</option>
+                            <option value="portuguese" id=lang_p>Portuguese</option>
+                            <option value="german" id=lang_de>Deutsch</option>
+                            <option value="french" value="Français" id=lang_fr>Français</option>
+                            <option value="italian" value="Italiano" id=lang_it>Italiano</option>
+                            <option value="dutch" value="Nederlands" id=lang_nl>Nederlands</option>
+                            <option value="polish" id=lang_pl>Polski</option>
+                            <option value="ukrainian" id=lang_uk>Українська</option>
+                            <option value="russian" id=lang_ru>Русский</option>
+                            <option value="japanese" id=lang_jp>日本語</option>
+                            <option value="chinese_simplified" id=lang_cn>简体中文 (中国)</option>
+                          </select>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel">
+                  <div class="row">
+                    <div class="col-xs-12 text-justify">
+                      <p>
+                        The spend key and view key are the raw private keys for the
+                        new wallet.
+                      </p>
+                      <p>
+                        <b>They are here for your information, since they can be recovered using the mnemonic
+                          seed in the above box</b>.
+                          If you decide to keep them, <span class="label label-danger"><strong>keep them secure.</strong></span>
+                          <br>
+                          <strong>Wallet keys</strong> can be imported into wallet via menu <span class="label label-primary"><strong>File > Import private key</strong></span>
+                        </p>
+                      </div>
+                      <div class="col-xs-12">
+                        <table>
+                          <tbody>
+                            <tr style="background-color: #333;">
+                              <td><code class="black-code pull-left" style="word-break: break-all;">Spend&nbsp;key:&nbsp;</code><code class="black-code pull-right mb-5" id="spend_key_widget" style="word-break: break-all;">Generating...</code></td>
+                            </tr>
+                            <tr style="background-color: #333;">
+                              <td><code class="black-code pull-left" style="word-break: break-all;">View&nbsp;key:&nbsp;</code><code class="black-code pull-right mb-5" id="view_key_widget" style="word-break: break-all;">Generating...</code></td>
+                            </tr>
+                            <tr style="background-color: #333;">
+                              <td><code class="black-code pull-left" style="word-break: break-all;">Tracking&nbsp;key:&nbsp;</code><code class="black-code pull-right" id="tracking_keys_widget" style="word-break: break-all;">Generating...</code></td>
+                            </tr>
+                            <tr class="privatekey_class">
+                              <td><code class="pull-left" style="word-break: break-all;">Private&nbsp;key&nbsp;(Import this key into the <strong>GUI wallet</strong>):&nbsp;</code><code class="pull-right" id="wallet_keys_widget" style="word-break: break-all;">Generating...</code></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="page-footer no-print">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body tab-panel-bottom text-center">
+                  <small>
+                    <span>
+                      This page is based on code from <a href="https://mymonero.com/">MyMonero</a>
+                      <br>
+                      Thanks to luigi1111 for crypto fixes and improvements.
+                      <br>
+                      Thanks to Karbovanets (Aiw&euml;) for improvements and mnemonic seeds.
+                    </span>
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>

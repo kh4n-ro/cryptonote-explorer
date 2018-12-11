@@ -164,8 +164,8 @@
                 <tbody id="transactions_rows">
                   <tr ng-repeat="tx in ctrl.block.transactions">
                     <td class="text-center"><span>
-                      <a class="hidden-xs" ng-href="#tx/{{tx.hash}}"><code class="black-code">{{tx.hash}}</code></a>
-                      <a class="visible-xs" ng-href="#tx/{{tx.hash}}"><code class="black-code">{{tx.hash | hashFilter}}</code></a>
+                      <a class="hidden-xs" ng-href="/#/tx/{{tx.hash}}"><code class="black-code">{{tx.hash}}</code></a>
+                      <a class="visible-xs" ng-href="/#/tx/{{tx.hash}}"><code class="black-code">{{tx.hash | hashFilter}}</code></a>
                     </span></td>
                     <td class="text-center"><span>{{tx.fee | valuesfilter}}</span></td>
                     <td class="text-center"><span>{{tx.amount_out | valuesfilter}}</span></td>

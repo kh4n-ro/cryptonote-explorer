@@ -1,30 +1,67 @@
 doctype html
-html(ng-app="AlloyEX")
+html(ng-app="CNExplorer")
   head
     meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
-    title {{ctrl.config.name}}
+    title {{config.name || 'Cryptonote Blockchain Explorer'}}
     style(type="text/css") [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak { display: none !important; }
-    link(rel='stylesheet', href='/css/alloyex.min.css')
+    link(rel='stylesheet', href='/css/cnexplorer.min.css')
   body
     div(ng-cloak, ng-controller='menu_controller as ctrl')
-      .menu-helper.hidden-xs(ng-hide="ctrl.menuclicked")
-        .arrow
-        span Start here
-      dt-hamburger-menu(ng-click="ctrl.menuOpen()")
-    div(ng-cloak, ng-controller='search_controller as ctrl')
-      .btn.btn-circle.btn-default.search-button(ng-click="ctrl.search()")
-        i.fa.fa-search.fa-2x(ng-hide="ctrl.searchclicked")
-        i.fa.fa-times-circle.fa-2x(ng-show="ctrl.searchclicked")
-      .search-overlay(ng-show="ctrl.searchclicked")
-        .content-wrap
-          input.form-control(ng-change="ctrl.searchFieldChange()" ng-model="ctrl.searchvalue")
-          p.search-result(ng-if="ctrl.searchresults.type")
-            span.label.label-success.pull-left {{ctrl.searchresults.type}}
-            span.label.label-success.pull-right
-              a(ng-if="ctrl.searchresults.type === 'valid transaction'" ng-href="/#/tx/{{ctrl.searchresults.data.txDetails.hash}}" ng-click="ctrl.search()") view tx
-              a(ng-if="ctrl.searchresults.type === 'valid block'" ng-href="/#/block/{{ctrl.searchresults.data.hash}}" ng-click="ctrl.search()") view block
-            code.black-code.pull-right {{ctrl.searchresults.data.hash || ctrl.searchresults.data.txDetails.hash}} @ height {{ctrl.searchresults.data.height || ctrl.searchresults.data.block.height}}
+      .hidden-xs
+        nav.navbar.navbar-light.shadow
+          a.navbar-brand(href='/#/') {{config.name || 'Cryptonote Blockchain Explorer'}}
+          ul.nav.navbar-nav
+            li.nav-item
+              a.nav-link(href='/#/mempool') Mempool
+            li.nav-item
+              a.nav-link(href='/#/pools') Pools Monitor
+            li.nav-item
+              a.nav-link(href='/#/remotes') Remote Nodes
+            li.nav-item
+              a.nav-link(href='/#/paperwallet') Paper Wallet
+      .visible-xs
+          .menu-helper.hidden-xs(ng-hide="ctrl.menuclicked")
+            .arrow
+            span Start here
+          dt-hamburger-menu(ng-click="ctrl.menuOpen()")
+      div(ng-cloak, ng-controller='search_controller as ctrl')
+        .btn.btn-circle.btn-default.search-button(ng-click="ctrl.search()")
+          i.icon-database(ng-hide="ctrl.searchclicked")
+          i.icon-cancel-o(ng-show="ctrl.searchclicked")
+        .search-overlay(ng-show="ctrl.searchclicked")
+          .content-wrap
+            input.form-control(ng-change="ctrl.searchFieldChange()" ng-model="ctrl.searchvalue")
+            p.search-result(ng-if="ctrl.searchresults.type")
+              span.label.label-success.pull-left(ng-if="ctrl.searchresults.type !== 'transaction in mempool'" ) {{ctrl.searchresults.type}}
+              span.label.label-danger.pull-left(ng-if="ctrl.searchresults.type === 'transaction in mempool'") {{ctrl.searchresults.type}}
+              span.label.label-danger.pull-right(ng-if="ctrl.searchresults.type === 'transaction in mempool'")
+                a(ng-href="/#/mempool" ng-click="ctrl.search()") view tx
+              span.label.label-success.pull-right(ng-if="ctrl.searchresults.type !== 'transaction in mempool'" )
+                a(ng-if="ctrl.searchresults.type === 'valid transaction'" ng-href="/#/tx/{{ctrl.searchresults.data.txDetails.hash}}" ng-click="ctrl.search()") view tx
+                a(ng-if="ctrl.searchresults.type === 'valid block'" ng-href="/#/block/{{ctrl.searchresults.data.hash}}" ng-click="ctrl.search()") view block
+              code.black-code.pull-right {{ctrl.searchresults.data.hash || ctrl.searchresults.data.txDetails.hash}} @ height {{ctrl.searchresults.data.height || ctrl.searchresults.data.block.height}}
     block content
     div(particles style="z-index: -1;")
-    script(src="/js/alloyex.min.js")
-    
+    script(src="/js/cnexplorer.min.js")
+    script(async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsKdsemkZ9OKEIZQ2gnhEnrQmqmdHI008&callback=initMap")
+    script#gui_instructionsModal(type='text/ng-template')
+      .row
+        .col-xs-12
+          span GUI Walet - Remote node instructions
+          hr
+          span Open your {{config.paper_wallet_config.coinName}} GUI Wallet and go to &nbsp;
+            code.black-code preferrences
+          | &nbsp; enter your desired remote node and port, click save and restart the GUI Wallet app.
+          br
+          br
+          img.img-responsive(src="/images/gui-remote.png" alt="{{config.paper_wallet_config.coinName}} remote gui instructions")
+    script#terminal_instructionsModal(type='text/ng-template')
+      .row
+        .col-xs-12
+          span SimpleWallet - Remote node instructions
+          hr
+          span Start your SimpleWallet binary with the following arguments: &nbsp;
+            br
+            br
+            code.black-code --daemon-address remote_hostname:remote_port
+          | &nbsp;

@@ -1,4 +1,4 @@
-angular.module('AlloyEX.services', [])
+angular.module('CNExplorer.services', [])
 
 .factory('toastr', function ($rootScope) {
 	toastr = window.toastr;
@@ -21,12 +21,71 @@ angular.module('AlloyEX.services', [])
 	};
 	return toastr;
 })
+.factory('storagefactory', ['$log', function($log) {
+	var storage = {
+			data : {},
+			storage_id: 'LS_', // You can make this whatever you want
+			get: function( key )  {
+					var data , result;
 
+					try{
+							data = localStorage.getItem(this.storage_id+key);
+					} catch(e){}
+
+					try {
+							result = JSON.parse(data);
+					} catch(e) {
+							result = data;
+					}
+
+					//$log.info('>> storageService',key,result);
+					return result;
+			},
+			set: function(key,data){
+					if (typeof data == "object"){
+							data = JSON.stringify(data);
+					}
+
+					try{
+							localStorage.setItem(this.storage_id+key, data);
+					} catch(e){
+							$log.error('!! storageService',e);
+					}
+			},
+			remove: function(key)  {
+					try {
+							var status = localStorage.removeItem(this.storage_id+key);
+							$log.info('-- storageService',key);
+							return status;
+					} catch( e ){
+							$log.error('!! storageService',e);
+							return false;
+					}
+			}
+	};
+	return storage;
+}])
+.factory('logTimeTaken', [function() {
+    var logTimeTaken = {
+        request: function(config) {
+            config.requestTimestamp = new Date().getTime();
+            return config;
+        },
+        response: function(response) {
+            response.config.responseTimestamp = new Date().getTime();
+            return response;
+        }
+    };
+    return logTimeTaken;
+}])
 .factory('_', function ($rootScope) {
 	var lodash = window._;
 	return lodash;
 })
-
+.factory('socket', function ($rootScope) {
+	var socket = new Primus();
+	return socket;
+})
 .factory('api', ['$http', '$rootScope', function ($http, $rootScope) {
     var factory = {};
 

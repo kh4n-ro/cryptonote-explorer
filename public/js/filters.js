@@ -1,6 +1,6 @@
 
 /* Filters */
-angular.module('AlloyEX.filters', [])
+angular.module('CNExplorer.filters', [])
 .filter('numeral', function() {
     return function(input) {
       return parseFloat(input).toFixed(8);

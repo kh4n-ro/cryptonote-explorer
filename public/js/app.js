@@ -1,16 +1,17 @@
 'use strict';
 
-var AlloyEX = angular.module('AlloyEX', [
-	'AlloyEX.filters',
-	'AlloyEX.directives',
-	'AlloyEX.services',
-	'ngStorage',
+var CNExplorer = angular.module('CNExplorer', [
+	'CNExplorer.filters',
+	'CNExplorer.directives',
+	'CNExplorer.services',
 	'ngRoute',
 	'ngDialog',
 	'tooltips',
 	'tableSort',
 	'dt-hamburger-menu'
-]).config(function($routeProvider, $locationProvider) {
+]).config(['$locationProvider', function($locationProvider) {
+  $locationProvider.hashPrefix('');
+}]).config(function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {
 			templateUrl: '../templates/home.html',
@@ -36,7 +37,17 @@ var AlloyEX = angular.module('AlloyEX', [
 			templateUrl: '../templates/pools.html',
 			controllerAs: 'pools_controller'
 		})
+		.when('/remotes', {
+			templateUrl: '../templates/remotes.html',
+			controllerAs: 'remotes_controller'
+		})
+		.when('/paperwallet', {
+			templateUrl: '../templates/paperwallet.html',
+			controllerAs: 'paperwallet_controller'
+		})
 		.otherwise({
 			redirectTo: '/'
 		});
-});
+}).config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('logTimeTaken');
+}]);

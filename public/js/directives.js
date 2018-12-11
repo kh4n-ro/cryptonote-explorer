@@ -1,6 +1,6 @@
 /* Directives */
 
-angular.module('AlloyEX.directives', [])
+angular.module('CNExplorer.directives', [])
   .directive('appVersion', ['version', function(version) {
     return function(scope, elm, attrs) {
       elm.text(version);

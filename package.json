@@ -1,6 +1,6 @@
 {
-  "name": "AlloyEX",
-  "description": "Alloy Block Explorer",
+  "name": "CNExplorer",
+  "description": "Cryptonote Block Explorer",
   "private": true,
   "engines": {
     "node": "8.6.0",
@@ -19,37 +19,45 @@
     "debug": "^2.6.9",
     "events": "^1.1.1",
     "express": "^4.16.2",
+    "grunt-cli": "^1.2.0",
+    "helmet": "^3.12.1",
     "jwt-simple": "^0.5.1",
-    "lodash": "^4.17.4",
-    "mongoose": "^4.13.9",
-    "mongoose-deep-populate": "^3.0.0",
+    "lodash": "^4.17.5",
+    "mongoose": "^4.13.11",
+    "mongoose-deep-populate": "^3.1.1",
     "particles.js": "^2.0.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
+    "primus": "^7.1.1",
+    "primus-emit": "^1.0.0",
+    "primus-rooms": "^3.4.1",
     "pug": "^2.0.0-rc.4",
+    "shelljs": "^0.8.2",
+    "tail": "^2.0.0",
     "util": "^0.10.3",
+    "uuid": "^3.3.2",
     "validator": "^7.2.0",
     "verror": "^1.10.0",
     "ws": "^1.1.5"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kh4n-ro/Alloy-Block-Explorer"
+    "url": "https://github.com/kh4n-ro/cryptonote-explorer"
   },
-  "homepage": "https://github.com/kh4n-ro/Alloy-Block-Explorer",
+  "homepage": "https://github.com/kh4n-ro/cryptonote-explorer",
   "bugs": {
-    "url": "https://github.com/kh4nRO"
+    "url": "https://github.com/kh4n-ro"
   },
   "authors": [
     {
       "name": "Gabriel Moldoveanu",
       "email": "kh4n@vps-city.com",
-      "url": "https://github.com/kh4nRO"
+      "url": "https://github.com/kh4n-ro"
     }
   ],
-  "license": "LGPL-3.0",
+  "license": "GNU-GPLv3",
   "devDependencies": {
-    "grunt": "~1.0.1",
+    "grunt": "^1.0.2",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-copy": "~1.0.0",

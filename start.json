@@ -1,5 +1,5 @@
 [{
-  "name"              : "AlloyEX",
+  "name"              : "Cryptonote Explorer",
   "cwd"               : ".",
   "script"            : "app.js",
   "log_file"          : "logs/log.log",

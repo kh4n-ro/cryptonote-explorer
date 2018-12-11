@@ -1,0 +1,60 @@
+<div class="container-fluid" ng-cloak="ng-cloak" ng-controller="remotes_controller as ctrl" style="max-width: 1280px">
+  <div id="alertrow" class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body thin text-center poolinfo text-white">
+          <span>{{config.paper_wallet_config.coinName}} provides a series of <span class="label label-danger">remote nodes</span> that you can connect your wallet to and not need the entire blockchain downloaded locally.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th class="th-hash"><span>Hostname</span></th>
+                  <th class="th-height"><span>Port</span></th>
+                  <th class="size"><span>Height</span></th>
+                  <th class="time"><span>Incoming Conn</span></th>
+                  <th class="time"><span>Outgoing Conn</span></th>
+                  <th class="time"><span>Peers</span></th>
+                  <th class="th-txs"><span>Status</span></th>
+                </tr>
+              </thead>
+              <tbody ng-cloak="ng-cloak">
+                <tr ng-repeat="node in ctrl.remotes | orderBy:'height'">
+                  <td class="text-center">
+                    <a href="javascript:void(0);"><code class="black-code"> {{node.hostname}} </code></a>
+                  </td>
+                  <td class="text-center">{{ node.port }}</td>
+                  <td class="text-center">{{ node.height || 0 }}</td>
+                  <td class="text-center">{{ node.incoming_connections_count || 0 }}</td>
+                  <td class="text-center">{{ node.outgoing_connections_count || 0}}</td>
+                  <td class="text-center">{{ node.white_peerlist_size + node.grey_peerlist_size || 0 }}</td>
+                  <td ng-show="node.status === 'OK'" class="text-center"><span class="label label-success">{{ node.status }}</span></td>
+                  <td ng-show="node.status !== 'OK'" class="text-center"><span class="label label-danger">KO</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="panel panel-default tab-panel">
+        <div class="panel-body thin text-center poolinfo text-white">
+          <h6>
+            <span>Usage instructions: </span>
+            <span>
+              <a class="label label-primary" style="margin:0 15px;" href="javascript:void(0)" ng-click="ctrl.gui_instructions()">GUI Wallet</a>
+              <a class="label label-primary" href="javascript:void(0)" ng-click="ctrl.terminal_instructions()">Simple Wallet</a>
+            </span>
+          </h6>
+        </div>
+      </div>
+    </div>
+</div>
