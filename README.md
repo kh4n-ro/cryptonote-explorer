@@ -1,6 +1,6 @@
 The Cryptonote Explorer
 ============
-See it live on [**explorer.sh**](https://explorer.sh)
+See it live on [**alloyexplorer.com**](https://alloyexplorer.com)
 
 This is a **Blockchain Explorer** initially designed for tracking the [**Alloy [XAO]**](https://alloyproject.org)  services and network status but currently supporting a growing number of cryptocurrencies.
 
@@ -34,7 +34,7 @@ Provide a set of open-sourced services that I believe should be available by def
 - [ ] **Documentation**
 
 ## Screenshots
-> **Important:** A live version of this explorer can be found @ [https://alloyexplorer.sh](https://alloyexplorer.sh)
+> **Important:** A live version of this explorer can be found @ [https://alloyexplorer.com](https://alloyexplorer.com)
 >
 ![Screenshot](https://cdn.explorer.sh/cnexplorer/01-cnexplorer-home.jpg "Home")
 
